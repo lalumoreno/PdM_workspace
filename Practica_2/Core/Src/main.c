@@ -18,31 +18,27 @@
 #include "main.h"
 #include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
-/* Private includes ----------------------------------------------------------*/
-
-/* Private typedef -----------------------------------------------------------*/
-
 /* Private define ------------------------------------------------------------*/
-#define TICK_DURATION	100
-
-/* Private macro -------------------------------------------------------------*/
+#define TIMER_DURATION	100 //100ms
 
 /* Private variables ---------------------------------------------------------*/
-
+uint32_t cycle_counter[] = {5, 5, 5};	// Number of times that the cycle must be repeated
+uint32_t time_frame[] = {1000, 200, 100}; // Time frame in milliseconds
+uint32_t work_cycle[] = {50, 50, 50}; // Work cycle in percentage (Ex: 50%)
+const uint8_t MAXSEQ = sizeof(work_cycle) / sizeof(uint32_t);
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+tick_t getCycleDuration(uint8_t i);
 
 /* Private user code ---------------------------------------------------------*/
 
-
 /**
  * @brief  The application entry point.
- * @retval int
+ * @retval 0 on success
  */
 int main(void)
 {
-
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 
@@ -53,44 +49,65 @@ int main(void)
 	BSP_LED_Init(LED1);
 	BSP_LED_Init(LED2);
 
+	/* Initialize timer for point 2 */
 	delay_t timer;
-	delayInit(&timer, TICK_DURATION);
+	delayInit(&timer, TIMER_DURATION);
 
-	uint32_t times [] = {5,5,5};
-	uint32_t period[] = {1000,200,100};
-	uint32_t workload[] = {50,50,50};
+	/* Initialize timer for point 3 */
 	delay_t timer_2;
-	delayInit(&timer_2, 0);
-	uint32_t i = 0;
-	uint32_t t = 0;
+	uint8_t index = 0;
+	uint8_t counter = 0;
+	tick_t timer2_duration = getCycleDuration(index);
+	delayInit(&timer_2, timer2_duration);
 
 	/* Infinite loop */
 	while (1)
 	{
-		// 2. Toggle LED
+		// 2. Solution point 2
 		if (delayRead(&timer)) {
 			//Change LED status
 			BSP_LED_Toggle(LED1);
 		}
 
-		// 3.
+		// 3. Solution point 3
 		if (delayRead(&timer_2)) {
 			//Change LED status
 			BSP_LED_Toggle(LED2);
-			t++;
+			counter++; //Increase counter
 
-			if (t >= times[i]*2) {
-				uint32_t d = workload[i] * period[i] / 100;
-				delayWrite(&timer_2, d);
-				i = (i<2r) ? i+1 : 0;
-				t = 0;
+			if (counter >= cycle_counter[index]*2) {
+				index = (index < MAXSEQ - 1) ? index + 1 : 0; //Increase index or back to 0
+				timer2_duration = getCycleDuration(index);
+				delayWrite(&timer_2, timer2_duration);
+				counter = 0;
 			}
 		}
 
 	}
 
+	return 0;
+
 }
 
+/**
+ * @brief  Get correct cycle duration according to work_cycle percentage
+ * @param  i: index to the work_cycle and time_frame array
+ * @retval duration in milliseconds
+ */
+tick_t getCycleDuration(uint8_t i) {
+	if(i < 0 || i > MAXSEQ){
+		Error_Handler();
+	}
+
+	return work_cycle[i] * time_frame[i] / 100;
+}
+
+/**
+ * @brief  Initialize timer
+ * @param  delay: pointer to timer structure
+ * @param  duration: duration of the timer in milliseconds
+ * @retval None
+ */
 void delayInit(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
@@ -104,6 +121,11 @@ void delayInit(delay_t *delay, tick_t duration){
 	delay->running = false;
 }
 
+/**
+ * @brief  Read if the timer is expired
+ * @param  delay: pointer to timer structure
+ * @retval True if the duration of the timer expired
+ */
 bool_t delayRead(delay_t *delay){
 
 	if(delay == NULL) {
@@ -127,6 +149,12 @@ bool_t delayRead(delay_t *delay){
 	return false;
 }
 
+/**
+ * @brief  Write timer duration
+ * @param  delay: pointer to timer structure
+ * @param  duration: duration of the timer in milliseconds
+ * @retval None
+ */
 void delayWrite(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
