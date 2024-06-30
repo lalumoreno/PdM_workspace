@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -48,14 +49,9 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 
-/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
@@ -64,41 +60,60 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
   /* Configure the system clock */
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  /* USER CODE BEGIN 2 */
+  /* Initialize BSP Led for LED1 */
+  	BSP_LED_Init(LED1);
 
-  /* USER CODE END 2 */
+  	delay_t timer;
+  	delayInit(&timer, 100);
 
   /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+	if (delayRead(&timer)) {
+		//Change LED status
+		BSP_LED_Toggle(LED1);
+	}
 
-    /* USER CODE BEGIN 3 */
   }
-  /* USER CODE END 3 */
+
+}
+
+void delayInit(delay_t *delay, tick_t duration){
+	//Initialize delay structure
+	delay->startTime = 0;
+	delay->duration = duration;
+	delay->running = false;
+}
+
+bool_t delayRead(delay_t *delay){
+	if(delay->running){
+		tick_t currentTime = HAL_GetTick();
+		tick_t diff = currentTime - delay->startTime;
+
+		if (diff >= delay->duration) {
+			delay->running = false;
+			return true;
+		}
+
+	} else {
+		delay->startTime = HAL_GetTick();
+		delay->running = true;
+	}
+
+	return false;
+}
+
+void delayWrite(delay_t *delay, tick_t duration){
+	delay->duration = duration;
 }
 
 /**
