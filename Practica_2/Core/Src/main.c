@@ -75,11 +75,12 @@ int main(void)
 			BSP_LED_Toggle(LED2);
 			counter++; //Increase counter
 
+			// Move to next sequence if cycle_counter is completed
 			if (counter >= cycle_counter[index]*2) {
 				index = (index < MAXSEQ - 1) ? index + 1 : 0; //Increase index or back to 0
 				timer2_duration = getCycleDuration(index);
-				delayWrite(&timer_2, timer2_duration);
-				counter = 0;
+				delayWrite(&timer_2, timer2_duration);// Set new timer duration
+				counter = 0; // Reset counter
 			}
 		}
 
