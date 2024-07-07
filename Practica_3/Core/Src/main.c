@@ -32,12 +32,10 @@ void SystemClock_Config(void);
 
 /**
  * @brief  The application entry point.
- * @retval int
+ * @retval  0 on success
  */
 int main(void)
 {
-	/* MCU Configuration--------------------------------------------------------*/
-
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 
@@ -48,8 +46,7 @@ int main(void)
 	BSP_LED_Init(LED1);
 	BSP_LED_Init(LED2);
 
-	/* Initialize array and timer for point 2 */
-
+	/* Initialize timer for point 2 */
 	uint8_t index = 0;
 	delay_t timer;
 	bool_t ledState = false;
