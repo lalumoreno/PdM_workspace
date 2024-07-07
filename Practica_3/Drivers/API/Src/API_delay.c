@@ -17,7 +17,7 @@
 void delayInit(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
-		Error_Handler();
+		delayErrorHandler();
 		return;
 	}
 
@@ -35,7 +35,7 @@ void delayInit(delay_t *delay, tick_t duration){
 bool_t delayRead(delay_t *delay){
 
 	if(delay == NULL) {
-		Error_Handler();
+		delayErrorHandler();
 	}
 
 	if(delay->running){
@@ -64,10 +64,34 @@ bool_t delayRead(delay_t *delay){
 void delayWrite(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
-		Error_Handler();
+		delayErrorHandler();
 	}
 
 	delay->duration = duration;
 }
 
+/**
+ * @brief  Get if the timer is running
+ * @param  delay: pointer to timer structure
+ * @retval True or False
+ */
+bool_t delayIsRunning(delay_t * delay) {
 
+	if(delay == NULL) {
+		delayErrorHandler();
+	}
+
+	return delay->running;
+}
+
+/**
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void delayErrorHandler(void)
+{
+	__disable_irq();
+	while (1)
+	{
+	}
+}

@@ -44,7 +44,6 @@ int main(void)
 
 	/* Initialize BSP Led for LED1 and LED2 */
 	BSP_LED_Init(LED1);
-	BSP_LED_Init(LED2);
 
 	/* Initialize timer for point 2 */
 	uint8_t index = 0;
@@ -56,14 +55,18 @@ int main(void)
 	while (1)
 	{
 		if(delayRead(&timer)){
-			//Change LED state
+			// Change LED state
 			BSP_LED_Toggle(LED1);
 			ledState = ! ledState;
 
 			// If the LED was already turned on and off, change the duration of the timer
 			if(ledState == true){
 				index = (index < MAXSEQ - 1) ? index + 1 : 0; //Increase index or back to 0
-				delayWrite(&timer, TIEMPOS[index]);
+
+				// Point 3. Change the timer duration only if it is not running
+				if(!delayIsRunning(&timer)){
+					delayWrite(&timer, TIEMPOS[index]);
+				}
 			}
 		}
 	}
