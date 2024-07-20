@@ -12,15 +12,8 @@
 
 typedef bool bool_t;
 
-
 void debounceFSM_init(void);
-
-void debounceFSM_update(void);
-
-void writeKey(void);
-
-bool_t readKey();
-
-bool_t isButtonDown();
+void debounceFSM_update(bool_t button);
+bool_t debounceFSM_isButtonDown();
 
 #endif /* API_INC_API_DEBOUNCE_H_ */

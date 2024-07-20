@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file           : main.c
@@ -15,28 +14,33 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "API_debounce.h"
 #include "stm32f4xx_nucleo_144.h"
 #include "API_delay.h"
 
-/* Private typedef -----------------------------------------------------------*/
-
-/* Private define ------------------------------------------------------------*/
-
-/* Private macro -------------------------------------------------------------*/
+/* Private defines ---------------------------------------------------------*/
+#define DEBOUNCE_DURATION	50
 
 /* Private variables ---------------------------------------------------------*/
+const uint32_t TIEMPOS[]={100, 500};
+const uint8_t MAXSEQ = sizeof(TIEMPOS) / sizeof(uint32_t);
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
-static delay_t delay;
-static delay_t delayLED;
+
+void buttonPressed(){
+	BSP_LED_On(LED1);
+}
+
+void buttonReleased(){
+	BSP_LED_Off(LED1);
+}
+
 /**
  * @brief  The application entry point.
  * @retval int
@@ -49,71 +53,51 @@ int main(void)
 	/* Configure the system clock */
 	SystemClock_Config();
 
-	// Inicializo la FSM
-	debounceFSM_init();
-
-	// Delay del antirebote
-	delayInit(&delay, 40);
-
-	// Frecuencias
-
-	const uint32_t TIEMPOS[] = {100, 500};
-
-	uint32_t index = 0;
-
-	// Delay del LED2
-	delayInit(&delayLED, TIEMPOS[0]);
-
-	// Periféricos
+	/* Initialize LED1, LED2 and BUTTON_USER */
 	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 	BSP_LED_Init(LED1);
 	BSP_LED_Init(LED2);
 
+	/* Initialize Timers */
+	delay_t timerDebounce;
+	delay_t timerLED;
+
+	delayInit(&timerDebounce, DEBOUNCE_DURATION);
+
+	uint32_t index = 0;
+	delayInit(&timerLED, TIEMPOS[index]);
+
+	/* Initialize FSM */
+	debounceFSM_init();
+
 	while (1) {
 
-		if (delayRead(&delay)) {
-
-			// Lógica antirebote
-			if (BSP_PB_GetState(BUTTON_USER) == true) {
-				writeKey();
-			}
-
-			debounceFSM_update();
-
+		// Debounce timer
+		if (delayRead(&timerDebounce)) {
+			debounceFSM_update(BSP_PB_GetState(BUTTON_USER));
 		}
 
-		if (delayRead(&delay)) {
+		//Check if the button is pressed and do something
+		if (debounceFSM_isButtonDown()) {
 
-			// Punto 4.1
-			if (isButtonDown()) {
+			//Punto 1
+			buttonPressed();
 
-				BSP_LED_On(LED1);
+			//Punto 2
+			index = (index + 1) % MAXSEQ;
+			delayWrite(&timerLED, TIEMPOS[index]);
 
-			} else {
-
-				BSP_LED_Off(LED1);
-
-			}
-
-
+		} else {
+			buttonReleased();
 		}
 
-		if (delayRead(&delayLED)) {
-
+		//Toggle LED
+		if (delayRead(&timerLED)) {
 			BSP_LED_Toggle(LED2);
-
 		}
-
-		if (isButtonDown()) {
-
-			delayWrite(&delayLED, TIEMPOS[index]);
-			index = (index + 1) % (sizeof(TIEMPOS) / sizeof(TIEMPOS[0]));
-
-		}
-
-
 	}
 
+	return 0;
 }
 
 /**
@@ -164,28 +148,10 @@ void SystemClock_Config(void)
  */
 void Error_Handler(void)
 {
-	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1)
 	{
 	}
-	/* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
-/**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-	/* USER CODE BEGIN 6 */
-	/* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-	/* USER CODE END 6 */
-}
-#endif /* USE_FULL_ASSERT */

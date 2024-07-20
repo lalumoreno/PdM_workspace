@@ -8,6 +8,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "API_delay.h"
 
+/* Private function prototypes -----------------------------------------------*/
+void delayErrorHandler(void);
+
 /**
  * @brief  Initialize timer
  * @param  delay: pointer to timer structure
