@@ -30,14 +30,24 @@ const uint8_t MAXSEQ = sizeof(TIEMPOS) / sizeof(uint32_t);
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void buttonPressed(void);
+void buttonReleased(void);
 
 /* Private user code ---------------------------------------------------------*/
 
-void buttonPressed(){
+/**
+ * @brief  Turn on led if button pressed
+ * @retval None
+ */
+void buttonPressed() {
 	BSP_LED_On(LED1);
 }
 
-void buttonReleased(){
+/**
+ * @brief  Turn on led if button released
+ * @retval None
+ */
+void buttonReleased() {
 	BSP_LED_Off(LED1);
 }
 
@@ -77,6 +87,11 @@ int main(void)
 			debounceFSM_update(BSP_PB_GetState(BUTTON_USER));
 		}
 
+		//Toggle LED
+		if (delayRead(&timerLED)) {
+			BSP_LED_Toggle(LED2);
+		}
+
 		//Check if the button is pressed and do something
 		if (debounceFSM_isButtonDown()) {
 
@@ -89,11 +104,6 @@ int main(void)
 
 		} else {
 			buttonReleased();
-		}
-
-		//Toggle LED
-		if (delayRead(&timerLED)) {
-			BSP_LED_Toggle(LED2);
 		}
 	}
 

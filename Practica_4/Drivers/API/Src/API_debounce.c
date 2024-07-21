@@ -24,6 +24,10 @@ static bool_t button_pressed;
 /* Private function prototypes -----------------------------------------------*/
 bool_t debounceFSM_readKey();
 
+/**
+ * @brief  Initialize debouncer
+ * @retval None
+ */
 void debounceFSM_init() {
 
 	state = BUTTON_UP;
@@ -31,11 +35,19 @@ void debounceFSM_init() {
 
 }
 
+/**
+ * @brief  Get if button is down
+ * @retval True if button is down
+ */
 bool_t debounceFSM_isButtonDown() {
 
 	return (state == BUTTON_DOWN);
 }
 
+/**
+ * @brief  Get value of button_pressed
+ * @retval True if button is pressed
+ */
 bool_t debounceFSM_readKey() {
 
 	if (button_pressed) {
@@ -46,6 +58,10 @@ bool_t debounceFSM_readKey() {
 	return button_pressed;
 }
 
+/**
+ * @brief  Update debounce FSM and set new state according with transitions
+ * @retval None
+ */
 void debounceFSM_update(bool_t button ) {
 
 	button_pressed = button;
