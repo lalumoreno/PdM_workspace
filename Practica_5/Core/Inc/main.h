@@ -28,7 +28,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "stm32f4xx_nucleo_144.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
@@ -41,23 +45,9 @@ extern "C" {
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
-/* Definition for USARTx clock resources */
-/*
-#define USARTx                           USART3
-#define USARTx_CLK_ENABLE()              __HAL_RCC_USART3_CLK_ENABLE();
-#define USARTx_RX_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOD_CLK_ENABLE()
-#define USARTx_TX_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOD_CLK_ENABLE()
+/* USER CODE BEGIN EM */
 
-#define USARTx_FORCE_RESET()             __HAL_RCC_USART3_FORCE_RESET()
-#define USARTx_RELEASE_RESET()           __HAL_RCC_USART3_RELEASE_RESET()
-*/
-/* Definition for USARTx Pins *//*
-#define USARTx_TX_PIN                    GPIO_PIN_8
-#define USARTx_TX_GPIO_PORT              GPIOD
-#define USARTx_TX_AF                     GPIO_AF7_USART3
-#define USARTx_RX_PIN                    GPIO_PIN_9
-#define USARTx_RX_GPIO_PORT              GPIOD
-#define USARTx_RX_AF                     GPIO_AF7_USART3*/
+/* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
@@ -89,10 +79,6 @@ void Error_Handler(void);
 #define RMII_TXD1_GPIO_Port GPIOB
 #define LD3_Pin GPIO_PIN_14
 #define LD3_GPIO_Port GPIOB
-#define STLK_RX_Pin GPIO_PIN_8
-#define STLK_RX_GPIO_Port GPIOD
-#define STLK_TX_Pin GPIO_PIN_9
-#define STLK_TX_GPIO_Port GPIOD
 #define USB_PowerSwitchOn_Pin GPIO_PIN_6
 #define USB_PowerSwitchOn_GPIO_Port GPIOG
 #define USB_OverCurrent_Pin GPIO_PIN_7
