@@ -52,12 +52,18 @@ bool_t uartInit(){
  * @param String to print
  * @retval None
  */
-void uartSendString(uint8_t * pstring){
+bool_t uartSendString(uint8_t * pstring){
+
 	if(pstring == NULL) {
 		uartErrorHandler();
 	}
 
-	HAL_UART_Transmit(&huart, pstring, strlen((const char*)pstring), HAL_MAX_DELAY);
+	if (HAL_UART_Transmit(&huart, pstring, strlen((const char*)pstring), HAL_MAX_DELAY) != HAL_OK){
+		return false;
+	}
+
+	return true;
+
 }
 
 /**

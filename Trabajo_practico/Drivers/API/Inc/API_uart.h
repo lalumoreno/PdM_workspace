@@ -15,12 +15,12 @@
 /* Exported constants --------------------------------------------------------*/
 /* User can use this section to tailor USARTx/UARTx instance used and associated
    resources */
-#define USARTx                           USART6
+#define USARTx                           USART6 /* TX PIN ````````````````````````````````````RX*/
 
 typedef bool bool_t;		//1 byte
 
 bool_t uartInit();
-void uartSendString(uint8_t * pstring);
+bool_t uartSendString(uint8_t * pstring);
 void uartSendStringSize(uint8_t * pstring, uint16_t size);
 void uartReceiveStringSize(uint8_t * pstring, uint16_t size);
 

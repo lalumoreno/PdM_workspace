@@ -6,37 +6,31 @@
  */
 
 #include "dimmer_system.h"
-#include "API_delay.h"
 #include "ui.h"
 
 /* Private typedef -----------------------------------------------------------*/
-typedef enum {
-
-	UPDATE_UI,
-	READ_SENSOR,
-	PROCESS_DATA,
-	READ_TERMINAL,
-	PROCESS_TERMINAL
-
-} systemState_t;
 
 /* Private define ------------------------------------------------------------*/
-#define FSM_DELAY	1000 // 1 second
+#define DIMMER_FSM_DELAY	1000 // 1 second
 
 /* Private variables----------------------------------------------------------*/
-systemState_t current_state;
-delay_t timer;
+dimmerSysConfig_t mySystem; //Or send as paramter in each function
+
+/* System initialization */
+void dimmerSys_Init(){
 
 
-void systemFSMInit(){
-	//System init
-	delayInit(&timer, FSM_DELAY);
-	current_state = UPDATE_UI;
+	delayInit(&mySystem.timer, DIMMER_FSM_DELAY);
+
+	mySystem.current_state = UPDATE_UI;
 
 	/*Initial configurations of the system*/
+
 	//uint32_t relacion
-	//Init UART and others i2c pwm
+	//UART and others i2c pwm
+	//Initialize User Interface
 	uiInit();
+	uiPrintConfig(&mySystem);
 
 }
 
@@ -45,59 +39,59 @@ void systemConfigUpdate(){
 
 }
 
-void systemFSMUpdate(/*user input*/){
 //System update
-	if(delayRead(&timer)) {
+void dimmerSys_Update(/*user input*/){
+	if(delayRead(&mySystem.timer)) {
 
-		switch (current_state) {
+		switch (mySystem.current_state) {
 
 		case UPDATE_UI:
 			if (true) { //configmenu user input()
-				current_state = READ_TERMINAL;
+				mySystem.current_state = READ_TERMINAL;
 			} else {
-				current_state = READ_SENSOR;
+				mySystem.current_state = READ_SENSOR;
 			}
 			break;
 
 		case READ_SENSOR:
 			if (true) { //configmenu user input()
-				current_state = READ_TERMINAL;
+				mySystem.current_state = READ_TERMINAL;
 			} else {
-				current_state = PROCESS_DATA;
+				mySystem.current_state = PROCESS_DATA;
 			}
 			break;
 
 		case PROCESS_DATA:
 			if (true) { //configmenu user input()
-				current_state = READ_TERMINAL;
+				mySystem.current_state = READ_TERMINAL;
 			} else {
-				current_state = UPDATE_UI;
+				mySystem.current_state = UPDATE_UI;
 			}
 			break;
 
 		case READ_TERMINAL:
 			if (true) { //saveconfig user input()
-				current_state = PROCESS_TERMINAL;
+				mySystem.current_state = PROCESS_TERMINAL;
 			}
 			break;
 
 		case PROCESS_TERMINAL:
-			current_state = UPDATE_UI;
+			mySystem.current_state = UPDATE_UI;
 			break;
 
 		default:
-			current_state = UPDATE_UI;
+			mySystem.current_state = UPDATE_UI;
 			break;
 
 		}
 
-		systemFSMProcess();
+		dimmerSys_Process();
 	}
 }
 
-void systemFSMProcess() {
+void dimmerSys_Process() {
 
-	switch (current_state) {
+	switch (mySystem.current_state) {
 
 	case UPDATE_UI:
 		//call ui_update();

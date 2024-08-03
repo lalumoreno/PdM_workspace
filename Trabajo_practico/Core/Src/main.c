@@ -19,8 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_nucleo_144.h"
-#include "API_debounce.h"
-#include "API_delay.h"
 #include "dimmer_system.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -72,29 +70,20 @@ int main(void)
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 
-	/* USER CODE BEGIN Init */
-
-	/* USER CODE END Init */
-
 	/* Configure the system clock */
 	SystemClock_Config();
 
 	/* Initialize all configured peripherals */
-	MX_GPIO_Init();
+	//MX_GPIO_Init();
 
-	/*Init communication*/
-	//InitI2C();
-	//InitUART();
-
-
-	/*Init FSM*/
-	systemFSMInit();
+	/*Init system FSM*/
+	dimmerSys_Init();
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-
+		dimmerSys_Update();
 
 	}
 	/* USER CODE END 3 */
