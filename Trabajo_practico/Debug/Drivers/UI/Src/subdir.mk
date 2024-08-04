@@ -5,12 +5,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Drivers/UI/Src/uart_port.c \
 ../Drivers/UI/Src/ui.c 
 
 OBJS += \
+./Drivers/UI/Src/uart_port.o \
 ./Drivers/UI/Src/ui.o 
 
 C_DEPS += \
+./Drivers/UI/Src/uart_port.d \
 ./Drivers/UI/Src/ui.d 
 
 
@@ -21,7 +24,7 @@ Drivers/UI/Src/%.o Drivers/UI/Src/%.su Drivers/UI/Src/%.cyclo: ../Drivers/UI/Src
 clean: clean-Drivers-2f-UI-2f-Src
 
 clean-Drivers-2f-UI-2f-Src:
-	-$(RM) ./Drivers/UI/Src/ui.cyclo ./Drivers/UI/Src/ui.d ./Drivers/UI/Src/ui.o ./Drivers/UI/Src/ui.su
+	-$(RM) ./Drivers/UI/Src/uart_port.cyclo ./Drivers/UI/Src/uart_port.d ./Drivers/UI/Src/uart_port.o ./Drivers/UI/Src/uart_port.su ./Drivers/UI/Src/ui.cyclo ./Drivers/UI/Src/ui.d ./Drivers/UI/Src/ui.o ./Drivers/UI/Src/ui.su
 
 .PHONY: clean-Drivers-2f-UI-2f-Src
 

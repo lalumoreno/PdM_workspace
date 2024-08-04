@@ -27,7 +27,7 @@ typedef struct {
 	uint32_t sensorRead;
 	uint32_t pwmWrite;
 	delay_t timer;
-	dimmerSysState_t current_state;
+	dimmerSysState_t state;
 
 } dimmerSysConfig_t;
 

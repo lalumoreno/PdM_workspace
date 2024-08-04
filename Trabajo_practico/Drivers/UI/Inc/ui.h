@@ -13,7 +13,7 @@
 
 bool_t uiInit();
 void uiClear();
-void uiUpdate(); //receive Sensor read and pwm
+void uiUpdate(dimmerSysConfig_t * sys); //receive Sensor read and pwm
 void uiConfigMenu();
 void uiConfigSave();
 void uiPrintConfig(dimmerSysConfig_t * sys);

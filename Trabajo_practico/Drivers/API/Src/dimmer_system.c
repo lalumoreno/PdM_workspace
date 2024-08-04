@@ -22,12 +22,14 @@ void dimmerSys_Init(){
 
 	delayInit(&mySystem.timer, DIMMER_FSM_DELAY);
 
-	mySystem.current_state = UPDATE_UI;
+	mySystem.state = UPDATE_UI;
 
 	/*Initial configurations of the system*/
+	mySystem.sensorRead = 0;
+	mySystem.pwmWrite = 0;
+	mySystem.relation = 50;
 
-	//uint32_t relacion
-	//UART and others i2c pwm
+	//Init UART and others i2c pwm
 	//Initialize User Interface
 	uiInit();
 	uiPrintConfig(&mySystem);
@@ -43,44 +45,44 @@ void systemConfigUpdate(){
 void dimmerSys_Update(/*user input*/){
 	if(delayRead(&mySystem.timer)) {
 
-		switch (mySystem.current_state) {
+		switch (mySystem.state) {
 
 		case UPDATE_UI:
 			if (true) { //configmenu user input()
-				mySystem.current_state = READ_TERMINAL;
+				mySystem.state = READ_TERMINAL;
 			} else {
-				mySystem.current_state = READ_SENSOR;
+				mySystem.state = READ_SENSOR;
 			}
 			break;
 
 		case READ_SENSOR:
 			if (true) { //configmenu user input()
-				mySystem.current_state = READ_TERMINAL;
+				mySystem.state = READ_TERMINAL;
 			} else {
-				mySystem.current_state = PROCESS_DATA;
+				mySystem.state = PROCESS_DATA;
 			}
 			break;
 
 		case PROCESS_DATA:
 			if (true) { //configmenu user input()
-				mySystem.current_state = READ_TERMINAL;
+				mySystem.state = READ_TERMINAL;
 			} else {
-				mySystem.current_state = UPDATE_UI;
+				mySystem.state = UPDATE_UI;
 			}
 			break;
 
 		case READ_TERMINAL:
 			if (true) { //saveconfig user input()
-				mySystem.current_state = PROCESS_TERMINAL;
+				mySystem.state = PROCESS_TERMINAL;
 			}
 			break;
 
 		case PROCESS_TERMINAL:
-			mySystem.current_state = UPDATE_UI;
+			mySystem.state = UPDATE_UI;
 			break;
 
 		default:
-			mySystem.current_state = UPDATE_UI;
+			mySystem.state = UPDATE_UI;
 			break;
 
 		}
@@ -91,10 +93,10 @@ void dimmerSys_Update(/*user input*/){
 
 void dimmerSys_Process() {
 
-	switch (mySystem.current_state) {
+	switch (mySystem.state) {
 
 	case UPDATE_UI:
-		//call ui_update();
+		uiUpdate(&mySystem);
 		break;
 
 	case READ_SENSOR:

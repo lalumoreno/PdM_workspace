@@ -6,13 +6,24 @@
  */
 
 #include <string.h>
-#include "stm32f4xx_hal.h"
-#include "API_uart.h"
+#include <uart_port.h>
+#include <stdio.h>
+
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif
 
 void uartErrorHandler(void);
 
 UART_HandleTypeDef huart;
-
+/*
+int _write(int file, char *ptr, int len){
+	HAL_UART_Transmit(&huart, (uint8_t *)ptr, len, HAL_MAX_DELAY);
+	return len;
+}
+*/
 /**
  * @brief  Initialize UART protocol
  * @retval True if success, false otherwise
@@ -31,18 +42,6 @@ bool_t uartInit(){
 	{
 		return false;
 	}
-
-	// TODO convert configurations to strings and avoid hard coded values
-	uartSendString((uint8_t*)"UART configuration: \r\n");
-	uartSendString((uint8_t*)"Instance: USART6\r");
-	uartSendString((uint8_t*)"BaudRate: 115200\r\n");
-	uartSendString((uint8_t*)"WordLength: UART_WORDLENGTH_8B\r\n");
-	uartSendString((uint8_t*)"StopBits: UART_STOPBITS_1\r\n");
-	uartSendString((uint8_t*)"Parity: UART_PARITY_NONE\r\n");
-	uartSendString((uint8_t*)"Mode: UART_HWCONTROL_NONE\r\n");
-	uartSendString((uint8_t*)"HwFlowCtl: UART_OVERSAMPLING_16\r\n");
-	uartSendString((uint8_t*)"OverSampling: UART_OVERSAMPLING_16\r\n");
-	uartSendString((uint8_t*)"Initialization successful \r\n");
 
 	return true;
 }
@@ -63,6 +62,12 @@ bool_t uartSendString(uint8_t * pstring){
 	}
 
 	return true;
+
+}
+
+void uartPrintf(){
+
+	printf("Hello World\n");
 
 }
 
@@ -105,3 +110,9 @@ void uartErrorHandler(void)
 	}
 }
 
+
+PUTCHAR_PROTOTYPE
+{
+  HAL_UART_Transmit(&huart, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  return ch;
+}
