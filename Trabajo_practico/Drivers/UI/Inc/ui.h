@@ -11,7 +11,7 @@
 #include "common.h"
 #include "dimmer_system.h"
 
-bool_t uiInit();
+bool_t uiInit(dimmerSysConfig_t * sys);
 void uiClear();
 void uiUpdate(dimmerSysConfig_t * sys); //receive Sensor read and pwm
 void uiConfigMenu();

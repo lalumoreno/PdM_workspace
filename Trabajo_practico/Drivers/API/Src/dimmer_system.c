@@ -11,7 +11,7 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define DIMMER_FSM_DELAY	1000 // 1 second
+#define DIMMER_FSM_DELAY	2000 // 2 second
 
 /* Private variables----------------------------------------------------------*/
 dimmerSysConfig_t mySystem; //Or send as paramter in each function
@@ -31,8 +31,7 @@ void dimmerSys_Init(){
 
 	//Init UART and others i2c pwm
 	//Initialize User Interface
-	uiInit();
-	uiPrintConfig(&mySystem);
+	uiInit(&mySystem);
 
 }
 

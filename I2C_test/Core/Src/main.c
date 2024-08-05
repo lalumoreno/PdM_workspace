@@ -48,7 +48,7 @@ ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptor
 
 ETH_HandleTypeDef heth;
 
-I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c;
 
 UART_HandleTypeDef huart3;
 
@@ -231,30 +231,30 @@ static void MX_I2C1_Init(void)
   /* USER CODE BEGIN I2C1_Init 1 */
 
   /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  hi2c.Instance = I2C1;
+  hi2c.Init.ClockSpeed = 100000;
+  hi2c.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c.Init.OwnAddress1 = 0;
+  hi2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c.Init.OwnAddress2 = 0;
+  hi2c.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c) != HAL_OK)
   {
     Error_Handler();
   }
 
   /** Configure Analogue filter
   */
-  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
 
   /** Configure Digital filter
   */
-  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c, 0) != HAL_OK)
   {
     Error_Handler();
   }

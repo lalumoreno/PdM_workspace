@@ -7,7 +7,6 @@
 
 #include <string.h>
 #include <uart_port.h>
-#include <stdio.h>
 
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -18,19 +17,14 @@
 void uartErrorHandler(void);
 
 UART_HandleTypeDef huart;
-/*
-int _write(int file, char *ptr, int len){
-	HAL_UART_Transmit(&huart, (uint8_t *)ptr, len, HAL_MAX_DELAY);
-	return len;
-}
-*/
+
 /**
  * @brief  Initialize UART protocol
  * @retval True if success, false otherwise
  */
 bool_t uartInit(){
 
-	huart.Instance = USARTx;
+	huart.Instance = USART6; //TX-CN7:PC6 RX-CN7:PC7
 	huart.Init.BaudRate = 115200;
 	huart.Init.WordLength = UART_WORDLENGTH_8B;
 	huart.Init.StopBits = UART_STOPBITS_1;

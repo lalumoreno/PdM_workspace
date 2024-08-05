@@ -7,9 +7,8 @@
 
 #include <uart_port.h>
 #include "ui.h"
-//#include "port.h"
 
-bool_t uiInit() {
+bool_t uiInit(dimmerSysConfig_t * sys) {
 
 	if(!uartInit()){
 		//Error in initialization
@@ -22,7 +21,7 @@ bool_t uiInit() {
 	uartSendString((uint8_t *)"********************************************** \r\n");
 	uartSendString((uint8_t *)"Dimer automatico \r\n");
 	uartSendString((uint8_t *)"********************************************** \r\n");
-	//uiPrintConfig(system_conig);
+	uiPrintConfig(sys);
 	//
 
 	//uartSendString("Dimer automatico \n"); timestamp y datos?
@@ -35,7 +34,7 @@ void uiClear() {
 //receive Sensor read and pwm
 void uiUpdate(dimmerSysConfig_t * sys) {
 	//uartSendString("Dimer automatico \n"); timestamp y datos?
-	uiPrintConfig(sys);
+	printf("* Sensor read: %d PWM Write: %d \r\n", sys->sensorRead, sys->pwmWrite);
 }
 
 void uiConfigMenu() {
@@ -49,9 +48,7 @@ void uiConfigSave(){
 void uiPrintConfig(dimmerSysConfig_t * sys){
 	uartSendString((uint8_t *)"System configuration: \r\n");
 	uartSendString((uint8_t *)"Sensor Read \r\n");
-	uartPrintf();
-	//uartSendString((uint8_t *)(sys->sensorRead + '0'));
-	//uartSendString((uint8_t *)"\r\n");
-	//Uart make string with arguments
-	//uartSendString((uint8_t *)"Configs \n" , sys%);
+	printf("Sensor read: %d \r\n", sys->sensorRead);
+	printf("PWM Write: %d \r\n", sys->pwmWrite);
+	printf("Relation: %d \r\n", sys->relation);
 }

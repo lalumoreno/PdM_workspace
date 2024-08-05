@@ -12,6 +12,7 @@ RM := rm -rf
 -include Drivers/UI/Src/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Drivers/BSP/STM32F4xx_Nucleo_144/subdir.mk
+-include Drivers/BH1750/Src/subdir.mk
 -include Drivers/API/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
