@@ -33,6 +33,7 @@ void uiClear() {
 
 //receive Sensor read and pwm
 void uiUpdate(dimmerSysConfig_t * sys) {
+	//TODO Check if initialized
 	//uartSendString("Dimer automatico \n"); timestamp y datos?
 	printf("* Sensor read: %d PWM Write: %d \r\n", sys->sensorRead, sys->pwmWrite);
 }

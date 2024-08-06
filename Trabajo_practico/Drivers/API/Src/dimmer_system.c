@@ -7,6 +7,8 @@
 
 #include "dimmer_system.h"
 #include "ui.h"
+#include "bh1750.h"
+#include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
 /* Private typedef -----------------------------------------------------------*/
 
@@ -16,9 +18,12 @@
 /* Private variables----------------------------------------------------------*/
 dimmerSysConfig_t mySystem; //Or send as paramter in each function
 
+void systemError();
+
 /* System initialization */
 void dimmerSys_Init(){
 
+	BSP_LED_Init(LED1);
 
 	delayInit(&mySystem.timer, DIMMER_FSM_DELAY);
 
@@ -33,6 +38,19 @@ void dimmerSys_Init(){
 	//Initialize User Interface
 	uiInit(&mySystem);
 
+	//systemError();
+
+	if (!sensorInit()){
+		systemError();
+	}
+
+}
+
+void systemError(){
+	/* Turn LED2 on */
+	BSP_LED_On(LED1);
+	while (1) {
+	}
 }
 
 //add parameters
