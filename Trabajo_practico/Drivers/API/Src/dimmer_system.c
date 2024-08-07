@@ -9,11 +9,12 @@
 #include "ui.h"
 #include "bh1750.h"
 #include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
+#include "pwm_port.h"
 
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define DIMMER_FSM_DELAY	1000 // 1 second
+#define DIMMER_FSM_DELAY	180 // 1 second
 
 /* Private variables----------------------------------------------------------*/
 dimmerSysConfig_t mySystem; //Or send as paramter in each function
@@ -48,6 +49,9 @@ void dimmerSys_Init(){
 	}
 
 	printf("sensorInit Ok \r\n");
+
+	initLamp();
+
 }
 
 void systemError(){
@@ -118,7 +122,7 @@ void dimmerSys_Process() {
 	switch (mySystem.state) {
 
 	case UPDATE_UI:
-		uiUpdate(&mySystem);
+		//uiUpdate(&mySystem);
 		break;
 
 	case READ_SENSOR:
@@ -131,13 +135,14 @@ void dimmerSys_Process() {
 		uint16_t lux = (data[0] << 8) | data[1]; // Combine MSB and LSB
 		printf("sensorReadtemp Ok %d \r\n", lux);
 		//printf("sensorReadtemp Ok %x \r\n", data);
-		//mySystem.sensorRead = data;
+		mySystem.sensorRead = data;
 
 		break;
 
 	case PROCESS_DATA:
 		//printf("PROCESS_DATA \r\n");
 		//call pwm_update();
+		lampChange();
 		break;
 
 	case READ_TERMINAL:

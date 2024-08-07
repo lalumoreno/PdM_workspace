@@ -27,6 +27,7 @@ Core/Startup \
 Drivers/API/Src \
 Drivers/BH1750/Src \
 Drivers/BSP/STM32F4xx_Nucleo_144 \
+Drivers/LAMP/Src \
 Drivers/STM32F4xx_HAL_Driver/Src \
 Drivers/UI/Src \
 

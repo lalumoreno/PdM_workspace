@@ -24,7 +24,7 @@ typedef enum {
 typedef struct {
 
 	uint32_t relation;
-	uint32_t sensorRead;
+	uint16_t sensorRead;
 	uint32_t pwmWrite;
 	delay_t timer;
 	dimmerSysState_t state;
