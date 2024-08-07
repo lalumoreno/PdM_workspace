@@ -13,7 +13,7 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define DIMMER_FSM_DELAY	2000 // 2 second
+#define DIMMER_FSM_DELAY	1000 // 1 second
 
 /* Private variables----------------------------------------------------------*/
 dimmerSysConfig_t mySystem; //Or send as paramter in each function
@@ -23,7 +23,7 @@ void systemError();
 /* System initialization */
 void dimmerSys_Init(){
 
-	BSP_LED_Init(LED1);
+	BSP_LED_Init(LED3);
 
 	delayInit(&mySystem.timer, DIMMER_FSM_DELAY);
 
@@ -36,20 +36,24 @@ void dimmerSys_Init(){
 
 	//Init UART and others i2c pwm
 	//Initialize User Interface
-	uiInit(&mySystem);
-
-	//systemError();
-
-	if (!sensorInit()){
+	if (!uiInit(&mySystem)){
 		systemError();
 	}
 
+	//int ret = sensorInit();
+	if ( !sensorInit()){
+		printf("sensorInit Error \r\n");
+		systemError();
+	}
+
+	printf("sensorInit Ok \r\n");
 }
 
 void systemError(){
 	/* Turn LED2 on */
-	BSP_LED_On(LED1);
+	BSP_LED_On(LED3);
 	while (1) {
+
 	}
 }
 
@@ -65,7 +69,7 @@ void dimmerSys_Update(/*user input*/){
 		switch (mySystem.state) {
 
 		case UPDATE_UI:
-			if (true) { //configmenu user input()
+			if (false) { //configmenu user input()
 				mySystem.state = READ_TERMINAL;
 			} else {
 				mySystem.state = READ_SENSOR;
@@ -73,7 +77,7 @@ void dimmerSys_Update(/*user input*/){
 			break;
 
 		case READ_SENSOR:
-			if (true) { //configmenu user input()
+			if (false) { //configmenu user input()
 				mySystem.state = READ_TERMINAL;
 			} else {
 				mySystem.state = PROCESS_DATA;
@@ -81,7 +85,7 @@ void dimmerSys_Update(/*user input*/){
 			break;
 
 		case PROCESS_DATA:
-			if (true) { //configmenu user input()
+			if (false) { //configmenu user input()
 				mySystem.state = READ_TERMINAL;
 			} else {
 				mySystem.state = UPDATE_UI;
@@ -110,6 +114,8 @@ void dimmerSys_Update(/*user input*/){
 
 void dimmerSys_Process() {
 
+	uint8_t data[2] = {0};
+
 	switch (mySystem.state) {
 
 	case UPDATE_UI:
@@ -117,18 +123,30 @@ void dimmerSys_Process() {
 		break;
 
 	case READ_SENSOR:
-		//call bh1750_read();
+
+		if ( !sensorReadtemp(&data, 2)){
+			printf("sensorReadtemp Error \r\n");
+			systemError();
+		}
+
+		uint16_t lux = (data[0] << 8) | data[1]; // Combine MSB and LSB
+		printf("sensorReadtemp Ok %d \r\n", lux);
+		//mySystem.sensorRead = data;
+
 		break;
 
 	case PROCESS_DATA:
+		//printf("PROCESS_DATA \r\n");
 		//call pwm_update();
 		break;
 
 	case READ_TERMINAL:
+		//printf("READ_TERMINAL \r\n");
 		//call ui_read();
 		break;
 
 	case PROCESS_TERMINAL:
+		//printf("READ_TERMINAL \r\n");
 		//call systemConfig_update()
 		break;
 

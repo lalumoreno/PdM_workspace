@@ -15,5 +15,7 @@ void sensorRead();
 void sensorWrite();
 bool_t sensorSendAddress();
 bool_t sensorPowerOn();
+bool_t sensorSetHighResolution();
+bool_t sensorReadtemp(uint8_t *pData, uint16_t Size);
 
 #endif /* BH1750_INC_BH1750_H_ */

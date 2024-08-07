@@ -21,10 +21,10 @@ bool_t uiInit(dimmerSysConfig_t * sys) {
 	uartSendString((uint8_t *)"********************************************** \r\n");
 	uartSendString((uint8_t *)"Dimer automatico \r\n");
 	uartSendString((uint8_t *)"********************************************** \r\n");
-	uiPrintConfig(sys);
-	//
 
+	uiPrintConfig(sys);
 	//uartSendString("Dimer automatico \n"); timestamp y datos?
+	return true;
 }
 
 void uiClear() {

@@ -8,7 +8,8 @@
 #include "bh1750.h"
 #include "i2c_port.h"
 
-#define ADDRESS 0x23
+#define ADDRESS 0x23 << 1
+#define BH1750_POWER_ON 0x01
 
 typedef enum {
 	// Power down
@@ -29,39 +30,39 @@ typedef enum {
 	ONE_TIME_LOW_RES_MODE = 0x23
 }instruction_t;
 
+bool_t sensorSendCmd(uint8_t cmd);
+
+
 //uint8_t address receive as parameter
 bool_t sensorInit(){
 
-	if(!i2cInit()) {
-		return false;
+	if (i2cInit()) {
+
+		if (sensorPowerOn()) {
+
+			return sensorSetHighResolution();
+		}
 	}
 
-	return sensorPowerOn();
+	return false;
+
 }
 
 bool_t sensorPowerOn(){
 
-	return i2CMasterWrite(ADDRESS, POWER_ON, 1);
+	return sensorSendCmd(POWER_ON);
+
 }
 
-bool_t sensorSendAddress(){
+bool_t sensorSetHighResolution(){
 
-	//	return i2CMasterWrite((uint8_t *)ADDRESS, 1);
+	return sensorSendCmd(CONTINUOUS_HIGH_RES_MODE);
+
 }
 
-bool_t sensorReadtemp(){
-/*
-	if (!sensorSendAddress()){
-		return false;
-	}
-*/
-	if(!i2CMasterWrite(ADDRESS, CONTINUOUS_HIGH_RES_MODE, 1)){
-		return false;
-	}
+bool_t sensorReadtemp(uint8_t *pData, uint16_t Size){
 
-	uint8_t data[16];
-	return i2CMasterRead(ADDRESS, data, 16);
-
+	 return i2CMasterRead(ADDRESS, pData, Size);
 }
 
 void sensorRead(){
@@ -69,7 +70,7 @@ void sensorRead(){
 
 }
 
-void sensorWrite() {
+bool_t sensorSendCmd(uint8_t cmd) {
 
-	//i2CWriteToMaster();
+	return i2CMasterWrite(ADDRESS, cmd, 1);
 }

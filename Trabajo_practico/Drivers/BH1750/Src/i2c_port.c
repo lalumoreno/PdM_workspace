@@ -7,8 +7,11 @@
 
 #include <string.h>
 #include "i2c_port.h"
+#include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
 I2C_HandleTypeDef hi2c;
+
+void i2csystemError();
 
 bool_t i2cInit(){
 
@@ -45,9 +48,9 @@ bool_t i2cInit(){
 }
 
 
-bool_t i2CMasterWrite(uint16_t DevAddress, uint8_t *pData, uint16_t Size) {
-	//HAL_I2C_Master_Transmit(&hi2c, 0x5C, pData,  strlen((const char*)pData), HAL_MAX_DELAY);
-	if (HAL_I2C_Master_Transmit(&hi2c, DevAddress, pData,  Size, HAL_MAX_DELAY) != HAL_OK) {
+bool_t i2CMasterWrite(uint16_t DevAddress, uint8_t *cmd, uint16_t Size) {
+
+	if (HAL_I2C_Master_Transmit(&hi2c, DevAddress, cmd,  1, HAL_MAX_DELAY) != HAL_OK) {
 		return false;
 	}
 
@@ -82,3 +85,14 @@ bool_t i2cSlaveRead(uint8_t *pData, uint16_t Size){
 
 	return true;
 }
+
+void i2csystemError(){
+
+	BSP_LED_Init(LED2);
+	/* Turn LED2 on */
+	BSP_LED_On(LED2);
+	while (1) {
+
+	}
+}
+
