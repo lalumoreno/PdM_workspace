@@ -14,13 +14,16 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define DIMMER_FSM_DELAY	180 // 1 second
+#define DIMMER_FSM_DELAY	180 // milliseconds
+#define MAX_LUX				1000
+#define MIN_LUX				10
 
 /* Private variables----------------------------------------------------------*/
 dimmerSysConfig_t mySystem; //Or send as paramter in each function
 uint8_t data[2] = {0};
 
 void systemError();
+void setdimmerRelation();
 
 /* System initialization */
 void dimmerSys_Init(){
@@ -122,27 +125,23 @@ void dimmerSys_Process() {
 	switch (mySystem.state) {
 
 	case UPDATE_UI:
-		//uiUpdate(&mySystem);
+		uiUpdate(&mySystem);
 		break;
 
 	case READ_SENSOR:
 
-		if ( !sensorReadtemp(&data, 2)){
+		if ( !sensorReadtemp(data, 2)){
 			printf("sensorReadtemp Error \r\n");
 			systemError();
 		}
-
-		uint16_t lux = (data[0] << 8) | data[1]; // Combine MSB and LSB
-		printf("sensorReadtemp Ok %d \r\n", lux);
-		//printf("sensorReadtemp Ok %x \r\n", data);
-		mySystem.sensorRead = data;
+		mySystem.oldSensorRead = mySystem.sensorRead;
+		mySystem.sensorRead = (data[0] << 8) | data[1]; // Combine MSB and LSB
 
 		break;
 
 	case PROCESS_DATA:
-		//printf("PROCESS_DATA \r\n");
-		//call pwm_update();
-		lampChange();
+		setdimmerRelation();
+		lampChange(mySystem.pwmWrite);
 		break;
 
 	case READ_TERMINAL:
@@ -158,5 +157,20 @@ void dimmerSys_Process() {
 	default:
 		break;
 
+	}
+}
+
+void setdimmerRelation(){
+
+	uint16_t varMax = mySystem.sensorRead ;
+
+	if (mySystem.sensorRead > MAX_LUX){
+		varMax = MAX_LUX;
+	}
+
+	mySystem.pwmWrite = 999 - (varMax - MIN_LUX); //linear relation
+
+	if (mySystem.pwmWrite < 0) {
+		mySystem.pwmWrite = 0;
 	}
 }

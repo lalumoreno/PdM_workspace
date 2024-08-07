@@ -10,5 +10,6 @@
 
 
 void initLamp();
+void lampChange(uint32_t pulse);
 
 #endif /* LAMP_INC_LAMP_H_ */

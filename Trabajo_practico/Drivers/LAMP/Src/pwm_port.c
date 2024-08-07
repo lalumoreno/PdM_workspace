@@ -79,7 +79,7 @@ void PWMStart() {
 uint32_t PWMChange(uint32_t pulse) {
 
 	if (pulse >= htim3.Init.Period) {
-		pulse = 0;
+		pulse = 999;
 	}
 
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pulse);

@@ -7,8 +7,6 @@
 
 #include "pwm_port.h"
 
-uint32_t pulse = 0 ;
-
 void initLamp(){
 
 	MX_TIM3_Init();
@@ -16,13 +14,10 @@ void initLamp(){
 
 }
 
-void lampChange() {
+void lampChange(uint32_t pulse) {
 
-	pulse += 100;
+	PWMChange(pulse);
 
-	uint32_t out;
-	out = PWMChange(pulse);
-	pulse = out;
 }
 
 

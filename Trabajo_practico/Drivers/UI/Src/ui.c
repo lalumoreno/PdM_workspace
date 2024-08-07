@@ -35,7 +35,11 @@ void uiClear() {
 void uiUpdate(dimmerSysConfig_t * sys) {
 	//TODO Check if initialized
 	//uartSendString("Dimer automatico \n"); timestamp y datos?
-	printf("* Sensor read: %d PWM Write: %d \r\n", sys->sensorRead, sys->pwmWrite);
+	if(sys->sensorRead != sys->oldSensorRead) {
+		//Only print if there was a change in lux
+		printf("* Sensor read: %d PWM Write: %d \r\n", sys->sensorRead, sys->pwmWrite);
+	}
+
 }
 
 void uiConfigMenu() {
