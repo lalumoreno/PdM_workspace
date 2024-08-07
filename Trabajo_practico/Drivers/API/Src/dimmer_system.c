@@ -17,6 +17,7 @@
 
 /* Private variables----------------------------------------------------------*/
 dimmerSysConfig_t mySystem; //Or send as paramter in each function
+uint8_t data[2] = {0};
 
 void systemError();
 
@@ -114,8 +115,6 @@ void dimmerSys_Update(/*user input*/){
 
 void dimmerSys_Process() {
 
-	uint8_t data[2] = {0};
-
 	switch (mySystem.state) {
 
 	case UPDATE_UI:
@@ -131,6 +130,7 @@ void dimmerSys_Process() {
 
 		uint16_t lux = (data[0] << 8) | data[1]; // Combine MSB and LSB
 		printf("sensorReadtemp Ok %d \r\n", lux);
+		//printf("sensorReadtemp Ok %x \r\n", data);
 		//mySystem.sensorRead = data;
 
 		break;

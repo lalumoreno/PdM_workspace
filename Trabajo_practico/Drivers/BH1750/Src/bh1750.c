@@ -10,6 +10,7 @@
 
 #define ADDRESS 0x23 << 1
 #define BH1750_POWER_ON 0x01
+#define BH1750_CONTINUOUS_HIGH_RES_MODE 0x10
 
 typedef enum {
 	// Power down
@@ -39,7 +40,7 @@ bool_t sensorInit(){
 	if (i2cInit()) {
 
 		if (sensorPowerOn()) {
-
+			//HAL_Delay(10); // 10 ms delay
 			return sensorSetHighResolution();
 		}
 	}
@@ -50,13 +51,13 @@ bool_t sensorInit(){
 
 bool_t sensorPowerOn(){
 
-	return sensorSendCmd(POWER_ON);
+	return sensorSendCmd(BH1750_POWER_ON);
 
 }
 
 bool_t sensorSetHighResolution(){
 
-	return sensorSendCmd(CONTINUOUS_HIGH_RES_MODE);
+	return sensorSendCmd(BH1750_CONTINUOUS_HIGH_RES_MODE);
 
 }
 
@@ -72,5 +73,5 @@ void sensorRead(){
 
 bool_t sensorSendCmd(uint8_t cmd) {
 
-	return i2CMasterWrite(ADDRESS, cmd, 1);
+	return i2CMasterWrite(ADDRESS, &cmd, 1);
 }
