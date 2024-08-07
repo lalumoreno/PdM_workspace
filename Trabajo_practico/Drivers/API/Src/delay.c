@@ -6,10 +6,10 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "API_delay.h"
+#include "delay.h"
 
 /* Private function prototypes -----------------------------------------------*/
-void delayErrorHandler(void);
+void delay_error(void);
 
 /**
  * @brief  Initialize timer
@@ -17,10 +17,10 @@ void delayErrorHandler(void);
  * @param  duration: duration of the timer in milliseconds
  * @retval None
  */
-void delayInit(delay_t *delay, tick_t duration){
+void delay_init(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
-		delayErrorHandler();
+		delay_error();
 		return;
 	}
 
@@ -35,10 +35,10 @@ void delayInit(delay_t *delay, tick_t duration){
  * @param  delay: pointer to timer structure
  * @retval True if the duration of the timer expired
  */
-bool_t delayRead(delay_t *delay){
+bool_t delay_read(delay_t *delay){
 
 	if(delay == NULL) {
-		delayErrorHandler();
+		delay_error();
 	}
 
 	if(delay->running){
@@ -64,36 +64,21 @@ bool_t delayRead(delay_t *delay){
  * @param  duration: duration of the timer in milliseconds
  * @retval None
  */
-void delayWrite(delay_t *delay, tick_t duration){
+void delay_write(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
-		delayErrorHandler();
+		delay_error();
 	}
 
 	delay->duration = duration;
 }
 
 /**
- * @brief  Get if the timer is running
- * @param  delay: pointer to timer structure
- * @retval True or False
- */
-bool_t delayIsRunning(delay_t * delay) {
-
-	if(delay == NULL) {
-		delayErrorHandler();
-	}
-
-	return delay->running;
-}
-
-/**
  * @brief  This function is executed in case of error occurrence.
  * @retval None
  */
-void delayErrorHandler(void)
+void delay_error(void)
 {
-	__disable_irq();
 	while (1)
 	{
 	}

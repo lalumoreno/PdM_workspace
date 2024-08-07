@@ -9,13 +9,11 @@
 #define UI_INC_UI_H_
 
 #include "common.h"
-#include "dimmer_system.h"
+#include "dimmer.h"
 
-bool_t uiInit(dimmerSysConfig_t * sys);
-void uiClear();
-void uiUpdate(dimmerSysConfig_t * sys); //receive Sensor read and pwm
-void uiConfigMenu();
-void uiConfigSave();
-void uiPrintConfig(dimmerSysConfig_t * sys);
+bool_t ui_init(dimmer_t * sys);
+void ui_update(dimmer_t * sys); //receive Sensor read and pwm
+void ui_menu();
+void ui_settings_save();
 
 #endif /* UI_INC_UI_H_ */

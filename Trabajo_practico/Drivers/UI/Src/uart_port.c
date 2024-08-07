@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-#include <uart_port.h>
+#include "uart_port.h"
 
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -14,7 +14,7 @@
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif
 
-void uartErrorHandler(void);
+void uart_error(void);
 
 UART_HandleTypeDef huart;
 
@@ -22,7 +22,7 @@ UART_HandleTypeDef huart;
  * @brief  Initialize UART protocol
  * @retval True if success, false otherwise
  */
-bool_t uartInit(){
+bool_t uart_init(){
 
 	huart.Instance = USART6; //TX-CN7:PC6 RX-CN7:PC7
 	huart.Init.BaudRate = 115200;
@@ -45,10 +45,10 @@ bool_t uartInit(){
  * @param String to print
  * @retval None
  */
-bool_t uartSendString(uint8_t * pstring){
+bool_t uart_send_string(uint8_t * pstring){
 
 	if(pstring == NULL) {
-		uartErrorHandler();
+		uart_error();
 	}
 
 	if (HAL_UART_Transmit(&huart, pstring, strlen((const char*)pstring), HAL_MAX_DELAY) != HAL_OK){
@@ -59,20 +59,14 @@ bool_t uartSendString(uint8_t * pstring){
 
 }
 
-void uartPrintf(){
-
-	printf("Hello World\n");
-
-}
-
 /**
  * @brief Prints only some bytes of a string
  * @param String to print and numbers of bytes to print
  * @retval None
  */
-void uartSendStringSize(uint8_t * pstring, uint16_t size){
+void uart_send_string_size(uint8_t * pstring, uint16_t size){
 	if(pstring == NULL) {
-		uartErrorHandler();
+		uart_error();
 	}
 
 	HAL_UART_Transmit(&huart, pstring, size, HAL_MAX_DELAY);
@@ -83,9 +77,9 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
  * @param Pointer to the buffer received and size of the buffer
  * @retval None
  */
-void uartReceiveStringSize(uint8_t * pstring, uint16_t size) {
+void uart_receive_string(uint8_t * pstring, uint16_t size) {
 	if(pstring == NULL) {
-		uartErrorHandler();
+		uart_error();
 	}
 
 	HAL_UART_Receive(&huart, pstring, size, HAL_MAX_DELAY);
@@ -95,7 +89,7 @@ void uartReceiveStringSize(uint8_t * pstring, uint16_t size) {
  * @brief  This function is executed in case of error occurrence.
  * @retval None
  */
-void uartErrorHandler(void)
+void uart_error(void)
 {
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();

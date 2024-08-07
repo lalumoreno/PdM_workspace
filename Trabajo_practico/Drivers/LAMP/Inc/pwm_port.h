@@ -8,10 +8,10 @@
 #ifndef LAMP_INC_PWM_PORT_H_
 #define LAMP_INC_PWM_PORT_H_
 
-#include "common.h"
+#include <common.h>
 
-void MX_TIM3_Init(void);
-void PWMStart();
-uint32_t PWMChange(uint32_t pulse);
+void pwm_init(void);
+void pwm_start();
+uint32_t pwm_update(uint32_t pulse);
 
 #endif /* LAMP_INC_PWM_PORT_H_ */

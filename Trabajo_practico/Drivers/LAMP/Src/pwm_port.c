@@ -5,9 +5,6 @@
  *      Author: laura
  */
 
-#ifndef LAMP_SRC_PWM_PORT_C_
-#define LAMP_SRC_PWM_PORT_C_
-
 #include "stm32f4xx_hal.h"
 
 TIM_HandleTypeDef htim3;
@@ -17,7 +14,7 @@ TIM_HandleTypeDef htim3;
  * @param None
  * @retval None
  */
-void MX_TIM3_Init(void)
+void pwm_init(void)
 {
 
 	/* USER CODE BEGIN TIM3_Init 0 */
@@ -71,12 +68,12 @@ void MX_TIM3_Init(void)
 
 }
 
-void PWMStart() {
+void pwm_start() {
 
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 }
 
-uint32_t PWMChange(uint32_t pulse) {
+uint32_t pwm_update(uint32_t pulse) {
 
 	if (pulse >= htim3.Init.Period) {
 		pulse = 999;
@@ -86,6 +83,3 @@ uint32_t PWMChange(uint32_t pulse) {
 
 	return pulse;
 }
-
-
-#endif /* LAMP_SRC_PWM_PORT_C_ */

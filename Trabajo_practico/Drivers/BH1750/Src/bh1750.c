@@ -8,9 +8,7 @@
 #include "bh1750.h"
 #include "i2c_port.h"
 
-#define ADDRESS 0x23 << 1
-#define BH1750_POWER_ON 0x01
-#define BH1750_CONTINUOUS_HIGH_RES_MODE 0x10
+#define BH1750_ADDRESS 0x23 << 1 //ADDR pin to GND
 
 typedef enum {
 	// Power down
@@ -29,19 +27,18 @@ typedef enum {
 	ONE_TIME_HIGH_RES_MODE_2 = 0x21,
 	// Measurement at 4 lux resolution. Measurement time is approx 16ms.
 	ONE_TIME_LOW_RES_MODE = 0x23
-}instruction_t;
+}command_t;
 
-bool_t sensorSendCmd(uint8_t cmd);
-
+bool_t bh1750_send_cmd(uint8_t cmd);
 
 //uint8_t address receive as parameter
-bool_t sensorInit(){
+bool_t bh1750_init(){
 
-	if (i2cInit()) {
+	if (i2c_init()) {
 
-		if (sensorPowerOn()) {
+		if (bh1750_power_on()) {
 			//HAL_Delay(10); // 10 ms delay
-			return sensorSetHighResolution();
+			return bh1750_high_resolution();
 		}
 	}
 
@@ -49,29 +46,24 @@ bool_t sensorInit(){
 
 }
 
-bool_t sensorPowerOn(){
+bool_t bh1750_power_on(){
 
-	return sensorSendCmd(BH1750_POWER_ON);
-
-}
-
-bool_t sensorSetHighResolution(){
-
-	return sensorSendCmd(BH1750_CONTINUOUS_HIGH_RES_MODE);
+	return bh1750_send_cmd(POWER_ON);
 
 }
 
-bool_t sensorReadtemp(uint8_t *pData, uint16_t Size){
+bool_t bh1750_high_resolution(){
 
-	 return i2CMasterRead(ADDRESS, pData, Size);
-}
-
-void sensorRead(){
-
+	return bh1750_send_cmd(CONTINUOUS_HIGH_RES_MODE);
 
 }
 
-bool_t sensorSendCmd(uint8_t cmd) {
+bool_t bh1750_read(uint8_t *pData, uint16_t Size){
 
-	return i2CMasterWrite(ADDRESS, &cmd, 1);
+	 return i2c_master_read(BH1750_ADDRESS, pData, Size);
+}
+
+bool_t bh1750_send_cmd(uint8_t cmd) {
+
+	return i2c_master_write(BH1750_ADDRESS, &cmd, 1);
 }

@@ -5,16 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Drivers/API/Src/API_delay.c \
-../Drivers/API/Src/dimmer_system.c 
+../Drivers/API/Src/delay.c \
+../Drivers/API/Src/dimmer.c 
 
 OBJS += \
-./Drivers/API/Src/API_delay.o \
-./Drivers/API/Src/dimmer_system.o 
+./Drivers/API/Src/delay.o \
+./Drivers/API/Src/dimmer.o 
 
 C_DEPS += \
-./Drivers/API/Src/API_delay.d \
-./Drivers/API/Src/dimmer_system.d 
+./Drivers/API/Src/delay.d \
+./Drivers/API/Src/dimmer.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +24,7 @@ Drivers/API/Src/%.o Drivers/API/Src/%.su Drivers/API/Src/%.cyclo: ../Drivers/API
 clean: clean-Drivers-2f-API-2f-Src
 
 clean-Drivers-2f-API-2f-Src:
-	-$(RM) ./Drivers/API/Src/API_delay.cyclo ./Drivers/API/Src/API_delay.d ./Drivers/API/Src/API_delay.o ./Drivers/API/Src/API_delay.su ./Drivers/API/Src/dimmer_system.cyclo ./Drivers/API/Src/dimmer_system.d ./Drivers/API/Src/dimmer_system.o ./Drivers/API/Src/dimmer_system.su
+	-$(RM) ./Drivers/API/Src/delay.cyclo ./Drivers/API/Src/delay.d ./Drivers/API/Src/delay.o ./Drivers/API/Src/delay.su ./Drivers/API/Src/dimmer.cyclo ./Drivers/API/Src/dimmer.d ./Drivers/API/Src/dimmer.o ./Drivers/API/Src/dimmer.su
 
 .PHONY: clean-Drivers-2f-API-2f-Src
 

@@ -11,9 +11,9 @@
 
 I2C_HandleTypeDef hi2c;
 
-void i2csystemError();
+void i2c_error();
 
-bool_t i2cInit(){
+bool_t i2c_init(){
 
 	hi2c.Instance = I2C1; //SDA-CN7:PB9 SCL-CN7:PB8
 	hi2c.Init.ClockSpeed = 100000;
@@ -48,7 +48,7 @@ bool_t i2cInit(){
 }
 
 
-bool_t i2CMasterWrite(uint16_t DevAddress, uint8_t *cmd, uint16_t Size) {
+bool_t i2c_master_write(uint16_t DevAddress, uint8_t *cmd, uint16_t Size) {
 
 	if (HAL_I2C_Master_Transmit(&hi2c, DevAddress, cmd,  1, HAL_MAX_DELAY) != HAL_OK) {
 		return false;
@@ -57,7 +57,7 @@ bool_t i2CMasterWrite(uint16_t DevAddress, uint8_t *cmd, uint16_t Size) {
 	return true;
 }
 
-bool_t i2CMasterRead(int16_t DevAddress, uint8_t *pData, uint16_t Size){
+bool_t i2c_master_read(int16_t DevAddress, uint8_t *pData, uint16_t Size){
 	if (HAL_I2C_Master_Receive(&hi2c, DevAddress, pData, Size, HAL_MAX_DELAY) != HAL_OK){
 		return false;
 	}
@@ -65,28 +65,7 @@ bool_t i2CMasterRead(int16_t DevAddress, uint8_t *pData, uint16_t Size){
 	return true;
 }
 
-//Add return value
-bool_t i2CSlaveWrite(uint8_t *pData, uint16_t Size) {
-	//I2C_HandleTypeDef *hi2c, uint8_t *pData, uint16_t Size, uint32_t Timeout
-	if (HAL_I2C_Slave_Transmit(&hi2c, pData, Size, HAL_MAX_DELAY) != HAL_OK)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool_t i2cSlaveRead(uint8_t *pData, uint16_t Size){
-	//I2C_HandleTypeDef *hi2c,  uint32_t Timeout
-	if (HAL_I2C_Slave_Receive(&hi2c, pData, Size,HAL_MAX_DELAY) != HAL_OK)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-void i2csystemError(){
+void i2c_error(){
 
 	BSP_LED_Init(LED2);
 	/* Turn LED2 on */

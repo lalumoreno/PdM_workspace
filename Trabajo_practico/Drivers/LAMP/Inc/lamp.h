@@ -9,7 +9,7 @@
 #define LAMP_INC_LAMP_H_
 
 
-void initLamp();
-void lampChange(uint32_t pulse);
+void lamp_init();
+void lamp_set_pulse(uint32_t pulse);
 
 #endif /* LAMP_INC_LAMP_H_ */

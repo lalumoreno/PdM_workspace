@@ -7,16 +7,16 @@
 
 #include "pwm_port.h"
 
-void initLamp(){
+void lamp_init(){
 
-	MX_TIM3_Init();
-	PWMStart();
+	pwm_init();
+	pwm_start();
 
 }
 
-void lampChange(uint32_t pulse) {
+void lamp_set_pulse(uint32_t pulse) {
 
-	PWMChange(pulse);
+	pwm_update(pulse);
 
 }
 
