@@ -13,7 +13,8 @@
 
 bool_t ui_init(dimmer_t * sys);
 void ui_update(dimmer_t * sys); //receive Sensor read and pwm
-void ui_menu();
+bool_t ui_menu_key();
 void ui_settings_save();
+bool_t ui_menu_settings();
 
 #endif /* UI_INC_UI_H_ */

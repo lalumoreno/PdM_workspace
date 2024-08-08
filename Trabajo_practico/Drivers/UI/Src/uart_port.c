@@ -14,10 +14,12 @@
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif
 
-
+void uart_read_it(void);
 void uart_error(void);
 
 UART_HandleTypeDef huart;
+uint8_t received_char;
+uint8_t rx_buffer[1]; // Buffer to store received data
 
 PUTCHAR_PROTOTYPE
 {
@@ -79,8 +81,6 @@ void uart_send_string_size(uint8_t * pstring, uint16_t size){
 	HAL_UART_Transmit(&huart, pstring, size, HAL_MAX_DELAY);
 }
 
-uint8_t rx_buffer[1]; // Buffer to store received data
-
 void uart_read_it(void) {
 	if (HAL_UART_Receive_IT(&huart, rx_buffer, sizeof(rx_buffer)) != HAL_OK) {
 		// Receive Error
@@ -92,30 +92,19 @@ void uart_read_it(void) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 	if (huart->Instance == USART6) {
-		// Check if received character is 'M'
-		if (rx_buffer[0] == 'M') {
-			// Handle the key press event
-			uart_send_string((uint8_t *)"Key 'M' Pressed!\r\n");
-		}
-
-		// Re-enable UART interrupt to receive more data
-		uart_read_it();
+		// Store the received character
+		received_char = rx_buffer[0];
+		//uart_send_string(&received_char);
 	}
+
+	uart_read_it();
 }
 
-/**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void uart_error(void)
-{
-	/* User can add his own implementation to report the HAL error return state */
-	__disable_irq();
-	while (1)
-	{
-	}
-}
+uint8_t uart_get_last_char() {
 
+	return received_char;
+	//return &received_char;
+}
 
 /******************************************************************************/
 /* STM32F4xx Peripheral Interrupt Handlers                                    */
@@ -130,4 +119,17 @@ void uart_error(void)
 void USART6_IRQHandler(void)
 {
 	HAL_UART_IRQHandler(&huart);
+}
+
+/**
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void uart_error(void)
+{
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1)
+	{
+	}
 }

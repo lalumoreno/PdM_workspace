@@ -97,7 +97,7 @@ void dimmer_fsm_update(/*user input*/){
 			break;
 
 		case READ_SENSOR:
-			if (false) { //configmenu user input()
+			if (ui_menu_key()) {
 				myDimmer.state = READ_TERMINAL;
 			} else {
 				myDimmer.state = UPDATE_LAMP;
@@ -137,7 +137,9 @@ void dimmer_process() {
 	switch (myDimmer.state) {
 
 	case UPDATE_UI:
+
 		ui_update(&myDimmer);
+
 		break;
 
 	case READ_SENSOR:
@@ -154,13 +156,15 @@ void dimmer_process() {
 		break;
 
 	case UPDATE_LAMP:
+
 		dimmer_get_pwm();
 		lamp_set_pulse(myDimmer.pwmPulse);
+
 		break;
 
 	case READ_TERMINAL:
-		//printf("READ_TERMINAL \r\n");
-		ui_menu();
+		printf("READ_TERMINAL \r\n");
+		ui_menu_settings();
 		//call ui_read();
 		break;
 
