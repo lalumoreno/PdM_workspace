@@ -26,6 +26,9 @@ bool_t ui_init(dimmer_t * sys) {
 
 	ui_print_settings(sys);
 	//uartSendString("Dimer automatico \n"); timestamp y datos?
+
+	uart_read_it();
+
 	return true;
 }
 
@@ -33,7 +36,7 @@ void ui_update(dimmer_t * sys) {
 	//TODO Check if initialized
 	//uartSendString("Dimer automatico \n"); timestamp y datos?
 	if(sys->currentLx != sys->previousLx) {
-		//Only print if there was a change in lux
+		//Only print if there was a change in lx
 		printf("* Sensor read: %d PWM Write: %d \r\n", sys->currentLx, sys->pwmPulse);
 	}
 
@@ -41,6 +44,7 @@ void ui_update(dimmer_t * sys) {
 
 void ui_menu() {
 
+//	UART_Read_IT();
 }
 
 void ui_settings_save(){

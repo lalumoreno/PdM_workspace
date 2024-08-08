@@ -160,6 +160,7 @@ void dimmer_process() {
 
 	case READ_TERMINAL:
 		//printf("READ_TERMINAL \r\n");
+		ui_menu();
 		//call ui_read();
 		break;
 

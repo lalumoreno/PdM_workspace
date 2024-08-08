@@ -14,9 +14,16 @@
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif
 
+
 void uart_error(void);
 
 UART_HandleTypeDef huart;
+
+PUTCHAR_PROTOTYPE
+{
+	HAL_UART_Transmit(&huart, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+	return ch;
+}
 
 /**
  * @brief  Initialize UART protocol
@@ -72,17 +79,28 @@ void uart_send_string_size(uint8_t * pstring, uint16_t size){
 	HAL_UART_Transmit(&huart, pstring, size, HAL_MAX_DELAY);
 }
 
-/**
- * @brief Receives a string
- * @param Pointer to the buffer received and size of the buffer
- * @retval None
- */
-void uart_receive_string(uint8_t * pstring, uint16_t size) {
-	if(pstring == NULL) {
+uint8_t rx_buffer[1]; // Buffer to store received data
+
+void uart_read_it(void) {
+	if (HAL_UART_Receive_IT(&huart, rx_buffer, sizeof(rx_buffer)) != HAL_OK) {
+		// Receive Error
 		uart_error();
 	}
+}
 
-	HAL_UART_Receive(&huart, pstring, size, HAL_MAX_DELAY);
+// Callback function called by HAL when data is received
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+
+	if (huart->Instance == USART6) {
+		// Check if received character is 'M'
+		if (rx_buffer[0] == 'M') {
+			// Handle the key press event
+			uart_send_string((uint8_t *)"Key 'M' Pressed!\r\n");
+		}
+
+		// Re-enable UART interrupt to receive more data
+		uart_read_it();
+	}
 }
 
 /**
@@ -99,8 +117,17 @@ void uart_error(void)
 }
 
 
-PUTCHAR_PROTOTYPE
+/******************************************************************************/
+/* STM32F4xx Peripheral Interrupt Handlers                                    */
+/* Add here the Interrupt Handlers for the used peripherals.                  */
+/* For the available peripheral interrupt handler names,                      */
+/* please refer to the startup file (startup_stm32f4xx.s).                    */
+/******************************************************************************/
+
+/**
+ * @brief This function handles USART6 global interrupt.
+ */
+void USART6_IRQHandler(void)
 {
-  HAL_UART_Transmit(&huart, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
-  return ch;
+	HAL_UART_IRQHandler(&huart);
 }
