@@ -7,7 +7,7 @@
 
 #include "pwm_port.h"
 
-void lamp_init(){
+bool_t lamp_init(){
 
 	pwm_init();
 	pwm_start();

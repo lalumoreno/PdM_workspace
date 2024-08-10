@@ -14,17 +14,9 @@
 #include "lamp.h"
 #include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
-
-/* Private typedef -----------------------------------------------------------*/
-
-
-
 /* Private define ------------------------------------------------------------*/
 
 #define DIMMER_FSM_DELAY	180 // milliseconds
-#define MAX_LX				1000 //TODO add as configurable
-#define MIN_LX				10 //TODO add as configurable
-
 
 /* Private variables----------------------------------------------------------*/
 
@@ -32,44 +24,50 @@ dimmer_t myDimmer; //Or send as parameter in each function
 uint8_t data[2] = {0};
 
 
-void dimmer_error();
+void dimmer_error(uint8_t * pstring);
 void dimmer_get_pwm();
 void dimmer_process();
+void dimmer_update_settings(ui_settings_t settings);
 
 /* System initialization */
 void dimmer_init(){
 
-	BSP_LED_Init(LED3);
-
-	delay_init(&myDimmer.timer, DIMMER_FSM_DELAY);
-
+	/* Initial configurations of the system */
 	myDimmer.state = INIT;
-
-	/*Initial configurations of the system*/
 	myDimmer.currentLx = 0;
 	myDimmer.pwmPulse = 0;
+	myDimmer.maxPulse = 199; // htim3.Init.Period;
+	dimmer_update_settings(SETTINGS_OPTION_1);
+	delay_init(&myDimmer.timer, DIMMER_FSM_DELAY);
 
-	//Init UART and others i2c pwm
-	//Initialize User Interface
-	if (!ui_init(&myDimmer)){
-		dimmer_error();
+	/* Initialize peripherals */
+	BSP_LED_Init(LED3);
+
+	/* Initialize User Interface */
+	if (!ui_init(&myDimmer)) {
+		dimmer_error("[DIMMER] Error UI Init\n\r");
 	}
+
+	/* Initialize BH1750 sensor */
+	if ( !bh1750_init()) {
+		dimmer_error("[DIMMER] Error BH1750 Sensor Init \n\r");
+	}
+
+	/* Initialize PWM pulse */
+	if( !lamp_init()) {
+		dimmer_error("[DIMMER] Error PWM Init\n\r");
+	}
+
+	ui_start();
 
 	myDimmer.state = UPDATE_UI;
 
-	//int ret = sensorInit();
-	if ( !bh1750_init()){
-		printf("sensorInit Error \r\n");
-		dimmer_error();
-	}
-
-	printf("sensorInit Ok \r\n");
-
-	lamp_init();
-
 }
 
-void dimmer_error(){
+void dimmer_error(uint8_t * pstring){
+
+	ui_print_error(pstring);
+
 	/* Turn LED2 on */
 	BSP_LED_On(LED3);
 	while (1) {
@@ -77,19 +75,14 @@ void dimmer_error(){
 	}
 }
 
-void dimmer_run(){
-	dimmer_fsm_update();
-}
-
-
-void dimmer_fsm_update(/*user input*/){
+void dimmer_fsm_update(){
 
 	if(delay_read(&myDimmer.timer)) {
 
 		switch (myDimmer.state) {
 
 		case UPDATE_UI:
-			if (false) { //configmenu user input()
+			if (ui_menu_key()) {
 				myDimmer.state = READ_TERMINAL;
 			} else {
 				myDimmer.state = READ_SENSOR;
@@ -105,7 +98,7 @@ void dimmer_fsm_update(/*user input*/){
 			break;
 
 		case UPDATE_LAMP:
-			if (false) { //configmenu user input()
+			if (ui_menu_key()) {
 				myDimmer.state = READ_TERMINAL;
 			} else {
 				myDimmer.state = UPDATE_UI;
@@ -113,12 +106,6 @@ void dimmer_fsm_update(/*user input*/){
 			break;
 
 		case READ_TERMINAL:
-			if (true) { //saveconfig user input()
-				myDimmer.state = SAVE_SETTINGS;
-			}
-			break;
-
-		case SAVE_SETTINGS:
 			myDimmer.state = UPDATE_UI;
 			break;
 
@@ -144,10 +131,8 @@ void dimmer_process() {
 
 	case READ_SENSOR:
 
-		//printf("READ_SENSOR \r\n");
 		if ( !bh1750_read(data, 2)){
-			printf("sensorReadtemp Error \r\n");
-			dimmer_error();
+			dimmer_error("[DIMMER] Error reading BH1750 sensor \r\n");
 		}
 
 		myDimmer.previousLx = myDimmer.currentLx;
@@ -163,14 +148,9 @@ void dimmer_process() {
 		break;
 
 	case READ_TERMINAL:
-		printf("READ_TERMINAL \r\n");
-		ui_menu_settings();
-		//call ui_read();
-		break;
-
-	case SAVE_SETTINGS:
-		//printf("READ_TERMINAL \r\n");
-		//call systemConfig_update()
+		uint8_t settings;
+		settings = ui_menu();
+		dimmer_update_settings(settings);
 		break;
 
 	default:
@@ -181,15 +161,40 @@ void dimmer_process() {
 
 void dimmer_get_pwm(){
 
-	uint16_t lx = myDimmer.currentLx ;
+	uint16_t lx = myDimmer.currentLx;
 
-	if (myDimmer.currentLx > MAX_LX){
-		lx = MAX_LX;
+	if (lx > myDimmer.maxLx) {
+		lx = myDimmer.maxLx;
+	} else if (lx < myDimmer.minLx) {
+		lx = myDimmer.minLx;
 	}
 
-	myDimmer.pwmPulse = 999 - (lx - MIN_LX); //linear relation
+	// Calcular el PWM en función de la relación inversa entre lx y pwmPulse
+	myDimmer.pwmPulse = myDimmer.maxPulse * (myDimmer.maxLx - lx) / (myDimmer.maxLx - myDimmer.minLx);
+}
 
-	if (myDimmer.pwmPulse < 0) {
-		myDimmer.pwmPulse = 0;
+void dimmer_update_settings(ui_settings_t settings){
+
+	//BH1750 gives lx from 0 to 60000
+	switch (settings) {
+
+	case SETTINGS_OPTION_1:
+		myDimmer.minLx = 0;
+		myDimmer.maxLx = 2000;
+		break;
+
+	case SETTINGS_OPTION_2:
+		myDimmer.minLx = 2001;
+		myDimmer.maxLx = 20000;
+		break;
+
+	case SETTINGS_OPTION_3:
+		myDimmer.minLx = 20001;
+		myDimmer.maxLx = 60000;
+		break;
+
+	default:
+		break;
 	}
+
 }

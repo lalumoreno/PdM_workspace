@@ -18,8 +18,6 @@ typedef struct {
 
 ui_t myUi;
 
-void ui_print_settings(dimmer_t * sys);
-
 bool_t ui_init(dimmer_t * sys) {
 
 	myUi.menuKey = false;
@@ -32,75 +30,87 @@ bool_t ui_init(dimmer_t * sys) {
 
 	myUi.initialized = true;
 
-	uart_send_string((uint8_t *)"********************************************** \r\n");
-	uart_send_string((uint8_t *)"Trabajo Practico CESE \r\n");
-	uart_send_string((uint8_t *)"Autor: Laura Moreno \r\n\n");
-	uart_send_string((uint8_t *)"********************************************** \r\n");
-	uart_send_string((uint8_t *)"Dimer automatico \r\n");
-	uart_send_string((uint8_t *)"********************************************** \r\n");
+	uart_read_it(); //Enable reading// return false
 
-	ui_print_settings(sys);
-	//uartSendString("Dimer automatico \n"); timestamp y datos?
-
-	uart_read_it(); //Enable reading
+	uart_send_string((uint8_t *)"\r\n\n\nDimmer init ... \r\n");
 
 	return true;
 }
 
 void ui_update(dimmer_t * sys) {
 	//TODO Check if initialized
-	//uartSendString("Dimer automatico \n"); timestamp y datos?
+
 	if(sys->currentLx != sys->previousLx) {
 		//Only print if there was a change in lx
-		printf("* Sensor read: %d PWM Write: %ld \r\n", sys->currentLx, sys->pwmPulse);
+		// Calcular el ciclo de trabajo en porcentaje
+		uint16_t duty_cycle = sys->pwmPulse * 100 / sys->maxPulse;
+		printf("* Sensor: %d lx - PWM duty cycle: %ld %% \r\n", sys->currentLx, duty_cycle);
 	}
+
+}
+
+void ui_print_error(uint8_t * pstring) {
+
+	uart_send_string(pstring);
+
+}
+
+void ui_start(){
+
+	uart_send_string((uint8_t *)"\r\nDimmer running ... \r\n\n");
+	uart_send_string((uint8_t *)"Press M to open User Menu \r\n\n");
 
 }
 
 bool_t ui_menu_key() {
 
 	uint8_t c = uart_get_last_char();
-	//uart_get_last_char(&c);
 
-	//uart_send_string(&c);
-	// Check if received character is 'M'
 	if (c == 'M') {
-		// Handle the key press event
-		uart_send_string((uint8_t *)"Key 'M' Pressed!\r\n");
 		return true;
 	}
 
 	return false;
 }
 
-bool_t ui_menu_settings(){
+ui_settings_t ui_menu(){
 
-	uart_send_string((uint8_t *)"Menu de configuracion: \r\n");
-	uart_send_string((uint8_t *)"Seleccione la relacion que desea manejar: \r\n");
-	uart_send_string((uint8_t *)"Presione C \r\n");
+	uint8_t c;
 
-	uint8_t c = uart_get_last_char();
+	uart_send_string((uint8_t *)"********************************************** \r\n");
+	uart_send_string((uint8_t *)"Please select the desired sensitivity level for the Lamp: \r\n");
+	uart_send_string((uint8_t *)"1. Low sensitivity \r\n");
+	uart_send_string((uint8_t *)"2. Medium sensitivity \r\n");
+	uart_send_string((uint8_t *)"3. High sensitivity \r\n");
+	uart_send_string((uint8_t *)"********************************************** \r\n");
 
-	// Check if received character is 'C'
-	while ( c != 'C') {
-		// Handle the key press event
+	//TODO Add timer to go back to main screen
+
+	//System is blocked unitl a setting is selected
+	while ( true ) {
+
 		c = uart_get_last_char();
-		//uart_send_string((uint8_t *)"Key 'C' Pressed!\r\n");
-		//return true;
+
+		switch( c ) {
+
+		case '1':
+			return SETTINGS_OPTION_1;
+			break;
+
+		case '2':
+			return SETTINGS_OPTION_2;
+			break;
+
+		case '3':
+			return SETTINGS_OPTION_3;
+			break;
+
+		default:
+			break;
+		}
 	}
-
-	uart_send_string((uint8_t *)"Fuera del menu \r\n");
-	return true;
-
 }
 
 void ui_settings_save(){
 
-}
-
-void ui_print_settings(dimmer_t * sys){
-	uart_send_string((uint8_t *)"System configuration: \r\n");
-	uart_send_string((uint8_t *)"Sensor Read \r\n");
-	printf("Sensor read: %d \r\n", sys->currentLx);
-	printf("PWM Write: %ld \r\n", sys->pwmPulse);
 }

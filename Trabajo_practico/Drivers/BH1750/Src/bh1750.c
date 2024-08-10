@@ -35,7 +35,6 @@ bool_t bh1750_send_cmd(uint8_t cmd);
 bool_t bh1750_init(){
 
 	if (i2c_init()) {
-
 		if (bh1750_power_on()) {
 			//HAL_Delay(10); // 10 ms delay
 			return bh1750_high_resolution();
@@ -60,7 +59,7 @@ bool_t bh1750_high_resolution(){
 
 bool_t bh1750_read(uint8_t *pData, uint16_t Size){
 
-	 return i2c_master_read(BH1750_ADDRESS, pData, Size);
+	return i2c_master_read(BH1750_ADDRESS, pData, Size);
 }
 
 bool_t bh1750_send_cmd(uint8_t cmd) {

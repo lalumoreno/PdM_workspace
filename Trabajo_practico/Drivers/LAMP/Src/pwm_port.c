@@ -6,6 +6,7 @@
  */
 
 #include "stm32f4xx_hal.h"
+#include "pwm_port.h"
 
 TIM_HandleTypeDef htim3;
 
@@ -14,7 +15,7 @@ TIM_HandleTypeDef htim3;
  * @param None
  * @retval None
  */
-void pwm_init(void)
+bool_t pwm_init(void)
 {
 
 	/* USER CODE BEGIN TIM3_Init 0 */
@@ -36,47 +37,53 @@ void pwm_init(void)
 	htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 	if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
 	{
-		Error_Handler();
+		return false;
 	}
+
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
 	if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
 	{
-		Error_Handler();
+		return false;
 	}
+
 	if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
 	{
-		Error_Handler();
+		return false;
 	}
+
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 	if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
 	{
-		Error_Handler();
+		return false;
 	}
+
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
 	sConfigOC.Pulse = 0;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
 	{
-		Error_Handler();
+		return false;
 	}
-	/* USER CODE BEGIN TIM3_Init 2 */
 
-	/* USER CODE END TIM3_Init 2 */
 	HAL_TIM_MspPostInit(&htim3);
 
 }
 
-void pwm_start() {
+bool_t pwm_start() {
 
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+	if (HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3) != HAL_OK){
+		return false;
+	}
+
+	return true;
 }
 
 uint32_t pwm_update(uint32_t pulse) {
 
-	if (pulse >= htim3.Init.Period) {
-		pulse = 999;
+	if (pulse > htim3.Init.Period) {
+		pulse = htim3.Init.Period;
 	}
 
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pulse);

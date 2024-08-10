@@ -22,8 +22,7 @@ typedef enum {
 	UPDATE_UI,
 	READ_SENSOR,
 	UPDATE_LAMP,
-	READ_TERMINAL,
-	SAVE_SETTINGS
+	READ_TERMINAL
 
 } dimmerState_t;
 
@@ -34,6 +33,9 @@ typedef struct {
 	uint16_t currentLx;
 	uint16_t previousLx;
 	uint32_t pwmPulse;
+	uint16_t minLx;
+	uint16_t maxLx;
+	uint16_t maxPulse;
 
 } dimmer_t;
 
@@ -41,7 +43,6 @@ typedef struct {
 /* Exported functions prototypes ---------------------------------------------*/
 
 void dimmer_init();
-void dimmer_run();
 void dimmer_fsm_update();
 
 #endif /* API_INC_DIMMER__H_ */

@@ -94,7 +94,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	if (huart->Instance == USART6) {
 		// Store the received character
 		received_char = rx_buffer[0];
-		//uart_send_string(&received_char);
 	}
 
 	uart_read_it();
@@ -103,7 +102,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 uint8_t uart_get_last_char() {
 
 	return received_char;
-	//return &received_char;
+
 }
 
 /******************************************************************************/
