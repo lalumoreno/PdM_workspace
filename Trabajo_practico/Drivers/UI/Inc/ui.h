@@ -25,5 +25,6 @@ bool_t ui_menu_key();
 void ui_settings_save();
 ui_settings_t ui_menu();
 void ui_start();
+void ui_print_error(uint8_t * pstring);
 
 #endif /* UI_INC_UI_H_ */

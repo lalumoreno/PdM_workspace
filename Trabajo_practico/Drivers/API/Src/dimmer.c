@@ -6,7 +6,6 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-
 #include "dimmer.h"
 #include "ui.h"
 #include "bh1750.h"
@@ -15,28 +14,29 @@
 #include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
 /* Private define ------------------------------------------------------------*/
-
 #define DIMMER_FSM_DELAY	180 // milliseconds
 
 /* Private variables----------------------------------------------------------*/
+dimmer_t myDimmer;
+uint8_t sensor_data[2] = {0};
 
-dimmer_t myDimmer; //Or send as parameter in each function
-uint8_t data[2] = {0};
-
-
+/* Private function prototypes -----------------------------------------------*/
 void dimmer_error(uint8_t * pstring);
 void dimmer_get_pwm();
 void dimmer_process();
 void dimmer_update_settings(ui_settings_t settings);
 
-/* System initialization */
+/**
+ * @brief  Dimmer system initialization.
+ * @retval None
+ */
 void dimmer_init(){
 
 	/* Initial configurations of the system */
 	myDimmer.state = INIT;
 	myDimmer.currentLx = 0;
 	myDimmer.pwmPulse = 0;
-	myDimmer.maxPulse = 199; // htim3.Init.Period;
+	myDimmer.maxPulse = 199; // TODO import value of htim3.Init.Period;
 	dimmer_update_settings(SETTINGS_OPTION_1);
 	delay_init(&myDimmer.timer, DIMMER_FSM_DELAY);
 
@@ -45,17 +45,17 @@ void dimmer_init(){
 
 	/* Initialize User Interface */
 	if (!ui_init(&myDimmer)) {
-		dimmer_error("[DIMMER] Error UI Init\n\r");
+		dimmer_error((uint8_t *)"[DIMMER] Error UI Init\n\r");
 	}
 
 	/* Initialize BH1750 sensor */
 	if ( !bh1750_init()) {
-		dimmer_error("[DIMMER] Error BH1750 Sensor Init \n\r");
+		dimmer_error((uint8_t *)"[DIMMER] Error BH1750 Sensor Init \n\r");
 	}
 
 	/* Initialize PWM pulse */
 	if( !lamp_init()) {
-		dimmer_error("[DIMMER] Error PWM Init\n\r");
+		dimmer_error((uint8_t *)"[DIMMER] Error PWM Init\n\r");
 	}
 
 	ui_start();
@@ -131,12 +131,12 @@ void dimmer_process() {
 
 	case READ_SENSOR:
 
-		if ( !bh1750_read(data, 2)){
-			dimmer_error("[DIMMER] Error reading BH1750 sensor \r\n");
+		if ( !bh1750_read(sensor_data, 2)){
+			dimmer_error((uint8_t *)"[DIMMER] Error reading BH1750 sensor \r\n");
 		}
 
 		myDimmer.previousLx = myDimmer.currentLx;
-		myDimmer.currentLx = (data[0] << 8) | data[1]; // Combine MSB and LSB
+		myDimmer.currentLx = (sensor_data[0] << 8) | sensor_data[1]; // Combine MSB and LSB
 
 		break;
 

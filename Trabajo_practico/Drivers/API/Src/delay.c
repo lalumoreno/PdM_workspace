@@ -1,5 +1,5 @@
 /*
- * API_delay.c
+ * delay.c
  *
  *  Created on: Jul 4, 2024
  *      Author: Laura Moreno
@@ -7,27 +7,26 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "delay.h"
-
-/* Private function prototypes -----------------------------------------------*/
-void delay_error(void);
+#include "stm32f4xx_hal.h"
 
 /**
- * @brief  Initialize timer
+ * @brief  Initialize non blocking timer
  * @param  delay: pointer to timer structure
  * @param  duration: duration of the timer in milliseconds
- * @retval None
+ * @retval True if success
  */
-void delay_init(delay_t *delay, tick_t duration){
+bool_t delay_init(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
-		delay_error();
-		return;
+		return false;
 	}
 
 	//Initialize delay structure
 	delay->startTime = 0;
 	delay->duration = duration;
 	delay->running = false;
+
+	return true;
 }
 
 /**
@@ -38,7 +37,7 @@ void delay_init(delay_t *delay, tick_t duration){
 bool_t delay_read(delay_t *delay){
 
 	if(delay == NULL) {
-		delay_error();
+		return false;
 	}
 
 	if(delay->running){
@@ -62,24 +61,15 @@ bool_t delay_read(delay_t *delay){
  * @brief  Write timer duration
  * @param  delay: pointer to timer structure
  * @param  duration: duration of the timer in milliseconds
- * @retval None
+ * @retval True if success
  */
-void delay_write(delay_t *delay, tick_t duration){
+bool_t delay_write(delay_t *delay, tick_t duration){
 
 	if(delay == NULL) {
-		delay_error();
+		return false;
 	}
 
 	delay->duration = duration;
-}
 
-/**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void delay_error(void)
-{
-	while (1)
-	{
-	}
+	return true;
 }

@@ -14,12 +14,9 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-
 #include "common.h"
-#include "stm32f4xx_hal.h"
 
-
-/* Exported types ------------------------------------------------------------*/
+/* Public types ------------------------------------------------------------*/
 
 typedef uint32_t tick_t; 	//4 bytes
 
@@ -30,11 +27,11 @@ typedef struct {
 } delay_t;
 
 
-/* Exported functions prototypes ---------------------------------------------*/
+/* Public functions prototypes ---------------------------------------------*/
 
-void delay_init(delay_t *delay, tick_t duration);
+bool_t delay_init(delay_t *delay, tick_t duration);
 bool_t delay_read(delay_t *delay);
-void delay_write(delay_t *delay, tick_t duration);
+bool_t delay_write(delay_t *delay, tick_t duration);
 
 #ifdef __cplusplus
 }

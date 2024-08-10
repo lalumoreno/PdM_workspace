@@ -190,29 +190,3 @@ void SysTick_Handler(void)
 
   /* USER CODE END SysTick_IRQn 1 */
 }
-
-/******************************************************************************/
-/* STM32F4xx Peripheral Interrupt Handlers                                    */
-/* Add here the Interrupt Handlers for the used peripherals.                  */
-/* For the available peripheral interrupt handler names,                      */
-/* please refer to the startup file (startup_stm32f4xx.s).                    */
-/******************************************************************************/
-
-/**
-  * @brief This function handles USART6 global interrupt.
-  */
-/*
-void USART6_IRQHandler(void)
-{*/
-  /* USER CODE BEGIN USART6_IRQn 0 */
-
-  /* USER CODE END USART6_IRQn 0 */
-  //HAL_UART_IRQHandler(&huart6);
-  /* USER CODE BEGIN USART6_IRQn 1 */
-
-  /* USER CODE END USART6_IRQn 1 */
-//}
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */

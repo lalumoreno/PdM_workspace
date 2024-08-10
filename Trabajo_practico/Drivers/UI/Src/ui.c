@@ -51,7 +51,9 @@ void ui_update(dimmer_t * sys) {
 
 void ui_print_error(uint8_t * pstring) {
 
-	uart_send_string(pstring);
+	if(myUi.initialized) {
+		uart_send_string(pstring);
+	}
 
 }
 

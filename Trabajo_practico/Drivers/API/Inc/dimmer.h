@@ -9,13 +9,12 @@
 #define API_INC_DIMMER__H_
 
 /* Includes ------------------------------------------------------------------*/
-
-#include "common.h"
 #include "delay.h"
 
 
 /* Exported types ------------------------------------------------------------*/
 
+// States of Finite State Machine
 typedef enum {
 
 	INIT,
@@ -26,21 +25,22 @@ typedef enum {
 
 } dimmerState_t;
 
+// Dimmer system structure
 typedef struct {
 
 	delay_t timer;
 	dimmerState_t state;
 	uint16_t currentLx;
 	uint16_t previousLx;
-	uint32_t pwmPulse;
+	uint8_t pwmPulse;
 	uint16_t minLx;
 	uint16_t maxLx;
-	uint16_t maxPulse;
+	uint8_t maxPulse;
 
 } dimmer_t;
 
 
-/* Exported functions prototypes ---------------------------------------------*/
+/* Public functions prototypes ---------------------------------------------*/
 
 void dimmer_init();
 void dimmer_fsm_update();
