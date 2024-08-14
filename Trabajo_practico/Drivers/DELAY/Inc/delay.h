@@ -14,10 +14,12 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "common.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 /* Public types ------------------------------------------------------------*/
-
+typedef bool bool_t;
 typedef uint32_t tick_t; 	//4 bytes
 
 typedef struct {

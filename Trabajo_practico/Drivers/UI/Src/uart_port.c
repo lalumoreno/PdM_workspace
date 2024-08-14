@@ -14,6 +14,7 @@
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif
 
+void USART6_IRQHandler(void);
 void uart_read_it(void);
 void uart_error(void);
 

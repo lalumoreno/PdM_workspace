@@ -8,8 +8,14 @@
 #ifndef BH1750_INC_I2C_PORT_H_
 #define BH1750_INC_I2C_PORT_H_
 
-#include "common.h"
+/* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include "stm32f4xx_hal.h"
+
+/* Public types ------------------------------------------------------------*/
+typedef bool bool_t;
 
 bool_t i2c_init();
 bool_t i2c_master_write(uint16_t DevAddress, uint8_t *cmd, uint16_t Size);

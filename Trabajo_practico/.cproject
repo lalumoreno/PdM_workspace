@@ -135,6 +135,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/BSP/STM32F4xx_Nucleo_144"/>
 									<listOptionValue builtIn="false" value="../Drivers/LAMP/Inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/UI/Inc"/>
+									<listOptionValue builtIn="false" value="../Drivers/DELAY/Inc"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1658299874" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

@@ -44,7 +44,7 @@ void ui_update(dimmer_t * sys) {
 		//Only print if there was a change in lx
 		// Calcular el ciclo de trabajo en porcentaje
 		uint16_t duty_cycle = sys->pwmPulse * 100 / sys->maxPulse;
-		printf("* Sensor: %d lx - PWM duty cycle: %ld %% \r\n", sys->currentLx, duty_cycle);
+		printf("* Sensor: %d lx - PWM duty cycle: %d %% \r\n", sys->currentLx, duty_cycle);
 	}
 
 }

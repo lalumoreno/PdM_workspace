@@ -8,10 +8,15 @@
 #ifndef UI_INC_UART_PORT_H_
 #define UI_INC_UART_PORT_H_
 
-#include "common.h"
+/* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_nucleo_144.h"
 
+/* Public types ------------------------------------------------------------*/
+typedef bool bool_t;
 
 bool_t uart_init();
 bool_t uart_send_string(uint8_t * pstring);

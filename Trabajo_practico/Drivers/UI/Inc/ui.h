@@ -8,7 +8,6 @@
 #ifndef UI_INC_UI_H_
 #define UI_INC_UI_H_
 
-#include "common.h"
 #include "dimmer.h"
 
 typedef enum {

@@ -24,7 +24,7 @@ void SystemClock_Config(void);
 
 /**
  * @brief  The application entry point.
- * @retval int
+ * @retval 0 on success
  */
 int main(void)
 {
@@ -37,15 +37,17 @@ int main(void)
 	/* Configure the system clock */
 	SystemClock_Config();
 
-	/* Initialize system */
+	/* Initialize dimmer system */
 	dimmer_init();
 
 	/* Infinite loop */
 	while (1)
 	{
-		// Update Finite State Machine of the system
+		// Update Finite State Machine of the dimmer system to keep it running
 		dimmer_fsm_update();
 	}
+
+	return 0;
 
 }
 

@@ -9,8 +9,14 @@
 #define API_INC_DIMMER__H_
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "stm32f4xx_hal.h"
 #include "delay.h"
 
+/* Public types ------------------------------------------------------------*/
+typedef bool bool_t;
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -42,7 +48,7 @@ typedef struct {
 
 /* Public functions prototypes ---------------------------------------------*/
 
-void dimmer_init();
-void dimmer_fsm_update();
+void dimmer_init(void);
+void dimmer_fsm_update(void);
 
 #endif /* API_INC_DIMMER__H_ */

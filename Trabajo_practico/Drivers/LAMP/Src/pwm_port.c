@@ -8,6 +8,8 @@
 #include "stm32f4xx_hal.h"
 #include "pwm_port.h"
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 TIM_HandleTypeDef htim3;
 
 /**
@@ -69,6 +71,7 @@ bool_t pwm_init(void)
 
 	HAL_TIM_MspPostInit(&htim3);
 
+	return true;
 }
 
 bool_t pwm_start() {
