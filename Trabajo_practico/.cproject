@@ -130,6 +130,11 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="../Drivers/API/Inc"/>
+									<listOptionValue builtIn="false" value="../Drivers/BH1750/Inc"/>
+									<listOptionValue builtIn="false" value="../Drivers/BSP/STM32F4xx_Nucleo_144"/>
+									<listOptionValue builtIn="false" value="../Drivers/LAMP/Inc"/>
+									<listOptionValue builtIn="false" value="../Drivers/UI/Inc"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1658299874" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
