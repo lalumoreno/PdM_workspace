@@ -110,6 +110,15 @@ uint8_t uart_get_last_char() {
 
 }
 
+/**
+ * @brief Get last character received in UART buffer
+ * @retval Last char received
+ */
+void uart_clear_last_char() {
+
+	received_char = '\0';
+
+}
 
 /**
  * @brief Callback function called by HAL when UART data is received in non-blocking mode

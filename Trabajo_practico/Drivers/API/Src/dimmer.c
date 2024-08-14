@@ -193,7 +193,9 @@ void dimmer_set_settings(ui_settings_t settings){
 		myDimmer.maxLx = 60000;
 		break;
 
+	case SETTINGS_TIMEOUT:
 	default:
+		//Keep previous settings
 		break;
 	}
 
@@ -206,7 +208,7 @@ void dimmer_set_settings(ui_settings_t settings){
  */
 void dimmer_error(uint8_t * pstring){
 
-	ui_print_error(pstring);
+	ui_print_string(pstring);
 
 	/* Turn LED3 on to indicate error*/
 	BSP_LED_On(LED3);

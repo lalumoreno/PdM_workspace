@@ -23,5 +23,6 @@ bool_t uart_send_string(uint8_t * pstring);
 bool_t uart_send_string_size(uint8_t * pstring, uint16_t size);
 uint8_t uart_get_last_char(void);
 bool_t uart_read_it(void);
+void uart_clear_last_char(void);
 
 #endif /* UI_INC_UART_PORT_H_ */
