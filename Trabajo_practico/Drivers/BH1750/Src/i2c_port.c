@@ -5,14 +5,19 @@
  *      Author: laura
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "i2c_port.h"
 #include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
-I2C_HandleTypeDef hi2c;
+/* Private variables----------------------------------------------------------*/
+static I2C_HandleTypeDef hi2c;
 
-void i2c_error();
 
+/**
+ * @brief  I2C protocol initialization.
+ * @retval True on success, False otherwise
+ */
 bool_t i2c_init(){
 
 	hi2c.Instance = I2C1; //SDA-CN7:PB9 SCL-CN7:PB8
@@ -47,31 +52,34 @@ bool_t i2c_init(){
 
 }
 
+/**
+ * @brief  I2C Write Master to Slave
+ * @param devAdd: Device Address
+ * @param cmd: pointer to the instruction to be sent
+ * @param size: size of the instruction
+ * @retval True on success, False otherwise
+ */
+bool_t i2c_master_write(uint16_t devAdd, uint8_t *cmd, uint16_t size) {
 
-bool_t i2c_master_write(uint16_t DevAddress, uint8_t *cmd, uint16_t Size) {
-
-	if (HAL_I2C_Master_Transmit(&hi2c, DevAddress, cmd,  1, HAL_MAX_DELAY) != HAL_OK) {
+	if (HAL_I2C_Master_Transmit(&hi2c, devAdd, cmd,  1, HAL_MAX_DELAY) != HAL_OK) {
 		return false;
 	}
 
 	return true;
 }
 
-bool_t i2c_master_read(int16_t DevAddress, uint8_t *pData, uint16_t Size){
-	if (HAL_I2C_Master_Receive(&hi2c, DevAddress, pData, Size, HAL_MAX_DELAY) != HAL_OK){
+/**
+ * @brief  I2C Read Slave from Master
+ * @param devAdd: Device Address
+ * @param cmd: pointer to the array to store data
+ * @param size: size of the data read
+ * @retval True on success, False otherwise
+ */
+bool_t i2c_master_read(int16_t devAdd, uint8_t *pData, uint16_t size){
+
+	if (HAL_I2C_Master_Receive(&hi2c, devAdd, pData, size, HAL_MAX_DELAY) != HAL_OK){
 		return false;
 	}
 
 	return true;
 }
-
-void i2c_error(){
-
-	BSP_LED_Init(LED2);
-	/* Turn LED2 on */
-	BSP_LED_On(LED2);
-	while (1) {
-
-	}
-}
-

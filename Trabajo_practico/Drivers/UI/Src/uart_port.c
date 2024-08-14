@@ -5,6 +5,7 @@
  *      Author: laura
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "uart_port.h"
 
@@ -14,13 +15,13 @@
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif
 
-void USART6_IRQHandler(void);
-void uart_read_it(void);
-void uart_error(void);
+/* Private variables----------------------------------------------------------*/
+static UART_HandleTypeDef huart;
+static uint8_t received_char;
+static uint8_t rx_buffer[1]; // Buffer to store received data
 
-UART_HandleTypeDef huart;
-uint8_t received_char;
-uint8_t rx_buffer[1]; // Buffer to store received data
+/* Private function prototypes -----------------------------------------------*/
+void USART6_IRQHandler(void);
 
 PUTCHAR_PROTOTYPE
 {
@@ -30,7 +31,7 @@ PUTCHAR_PROTOTYPE
 
 /**
  * @brief  Initialize UART protocol
- * @retval True if success, false otherwise
+ * @retval True if success, False otherwise
  */
 bool_t uart_init(){
 
@@ -52,13 +53,13 @@ bool_t uart_init(){
 
 /**
  * @brief Prints a whole string
- * @param String to print
- * @retval None
+ * @param pstring: Pointer to string to print
+ * @retval True if success, False otherwise
  */
 bool_t uart_send_string(uint8_t * pstring){
 
 	if(pstring == NULL) {
-		uart_error();
+		return false;
 	}
 
 	if (HAL_UART_Transmit(&huart, pstring, strlen((const char*)pstring), HAL_MAX_DELAY) != HAL_OK){
@@ -71,39 +72,58 @@ bool_t uart_send_string(uint8_t * pstring){
 
 /**
  * @brief Prints only some bytes of a string
- * @param String to print and numbers of bytes to print
+ * @param Pointer to string and numbers of bytes to print
+ * @retval True if success, False otherwise
+ */
+bool_t uart_send_string_size(uint8_t * pstring, uint16_t size) {
+	if(pstring == NULL) {
+		return false;
+	}
+
+	if (HAL_UART_Transmit(&huart, pstring, size, HAL_MAX_DELAY) != HAL_OK){
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * @brief Read UART on non-blocking mode and save data in rx_buffer
+ * @retval True if success, False otherwise
+ */
+bool_t uart_read_it(void) {
+
+	if (HAL_UART_Receive_IT(&huart, rx_buffer, sizeof(rx_buffer)) != HAL_OK) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * @brief Get last character received in UART buffer
+ * @retval Last char received
+ */
+uint8_t uart_get_last_char() {
+
+	return received_char;
+
+}
+
+
+/**
+ * @brief Callback function called by HAL when UART data is received in non-blocking mode
  * @retval None
  */
-void uart_send_string_size(uint8_t * pstring, uint16_t size){
-	if(pstring == NULL) {
-		uart_error();
-	}
-
-	HAL_UART_Transmit(&huart, pstring, size, HAL_MAX_DELAY);
-}
-
-void uart_read_it(void) {
-	if (HAL_UART_Receive_IT(&huart, rx_buffer, sizeof(rx_buffer)) != HAL_OK) {
-		// Receive Error
-		uart_error();
-	}
-}
-
-// Callback function called by HAL when data is received
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
+	//Filter to read only USART6
 	if (huart->Instance == USART6) {
 		// Store the received character
 		received_char = rx_buffer[0];
 	}
 
 	uart_read_it();
-}
-
-uint8_t uart_get_last_char() {
-
-	return received_char;
-
 }
 
 /******************************************************************************/
@@ -114,22 +134,10 @@ uint8_t uart_get_last_char() {
 /******************************************************************************/
 
 /**
- * @brief This function handles USART6 global interrupt.
+ * @brief This function handles USART global interrupt.
  */
 void USART6_IRQHandler(void)
 {
 	HAL_UART_IRQHandler(&huart);
 }
 
-/**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void uart_error(void)
-{
-	/* User can add his own implementation to report the HAL error return state */
-	__disable_irq();
-	while (1)
-	{
-	}
-}

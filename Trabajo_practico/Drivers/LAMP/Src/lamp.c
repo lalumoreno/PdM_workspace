@@ -5,19 +5,31 @@
  *      Author: laura
  */
 
-#include "pwm_port.h"
+/* Includes ------------------------------------------------------------------*/
+#include "lamp.h"
 
+/**
+ * @brief  Initialize lamp or LED
+ * @retval True if success, False otherwise
+ */
 bool_t lamp_init(){
 
-	pwm_init();
-	pwm_start();
+	if (pwm_init()) {
+		//If PWM initialized, start pulse generation
+		return pwm_start();
+	}
 
+	return false;
 }
+
+/**
+ * @brief Change pulse of PWM signal for lamp or LED
+ * @param pulse: pulse to set
+ * @retval None
+ */
 
 void lamp_set_pulse(uint32_t pulse) {
 
 	pwm_update(pulse);
 
 }
-
-

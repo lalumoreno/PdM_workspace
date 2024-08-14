@@ -17,8 +17,9 @@
 /* Public types ------------------------------------------------------------*/
 typedef bool bool_t;
 
+/* Public functions prototypes ---------------------------------------------*/
 bool_t pwm_init(void);
-bool_t pwm_start();
-uint32_t pwm_update(uint32_t pulse);
+bool_t pwm_start(void);
+void pwm_update(uint32_t pulse);
 
 #endif /* LAMP_INC_PWM_PORT_H_ */

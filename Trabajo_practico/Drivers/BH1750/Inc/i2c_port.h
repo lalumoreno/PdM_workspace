@@ -17,8 +17,9 @@
 /* Public types ------------------------------------------------------------*/
 typedef bool bool_t;
 
-bool_t i2c_init();
-bool_t i2c_master_write(uint16_t DevAddress, uint8_t *cmd, uint16_t Size);
-bool_t i2c_master_read(int16_t DevAddress, uint8_t *pData, uint16_t Size);
+/* Public functions prototypes ---------------------------------------------*/
+bool_t i2c_init(void);
+bool_t i2c_master_write(uint16_t devAdd, uint8_t *cmd, uint16_t size);
+bool_t i2c_master_read(int16_t devAdd, uint8_t *pData, uint16_t size);
 
 #endif /* BH1750_INC_I2C_PORT_H_ */

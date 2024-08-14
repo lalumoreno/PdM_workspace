@@ -16,12 +16,12 @@
 #define DIMMER_FSM_DELAY	180 // milliseconds
 
 /* Private variables----------------------------------------------------------*/
-dimmer_t myDimmer;
-uint8_t sensor_data[2] = {0};
+static dimmer_t myDimmer;
+static uint8_t sensor_data[2] = {0};
 
 /* Private function prototypes -----------------------------------------------*/
 static void dimmer_process(void);
-static uint8_t dimmer_get_pwm();
+static uint8_t dimmer_get_pulse();
 static void dimmer_set_settings(ui_settings_t settings);
 static void dimmer_error(uint8_t * pstring);
 
@@ -57,7 +57,7 @@ void dimmer_init(void){
 		dimmer_error((uint8_t *)"[DIMMER] Error PWM Init\n\r");
 	}
 
-	ui_start();
+	ui_print_start();
 
 	myDimmer.state = UPDATE_UI;
 
@@ -134,7 +134,7 @@ void dimmer_process() {
 		break;
 
 	case UPDATE_LAMP:
-		myDimmer.pwmPulse = dimmer_get_pwm();
+		myDimmer.pwmPulse = dimmer_get_pulse();
 		lamp_set_pulse(myDimmer.pwmPulse);
 		break;
 
@@ -154,7 +154,7 @@ void dimmer_process() {
  * @brief  Calculate PWM pulse based on dimmer settings
  * @retval PWM Pulse
  */
-uint8_t dimmer_get_pwm(){
+uint8_t dimmer_get_pulse(){
 
 	uint16_t lx = myDimmer.currentLx;
 

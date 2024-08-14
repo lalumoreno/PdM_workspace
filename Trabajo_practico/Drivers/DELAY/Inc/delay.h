@@ -6,8 +6,8 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef API_INC_DELAY_H_
-#define API_INC_DELAY_H_
+#ifndef DELAY_INC_DELAY_H_
+#define DELAY_INC_DELAY_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,7 +30,6 @@ typedef struct {
 
 
 /* Public functions prototypes ---------------------------------------------*/
-
 bool_t delay_init(delay_t *delay, tick_t duration);
 bool_t delay_read(delay_t *delay);
 bool_t delay_write(delay_t *delay, tick_t duration);
@@ -39,4 +38,4 @@ bool_t delay_write(delay_t *delay, tick_t duration);
 }
 #endif
 
-#endif /* API_INC_DELAY_H_ */
+#endif /* DELAY_INC_DELAY_H_ */

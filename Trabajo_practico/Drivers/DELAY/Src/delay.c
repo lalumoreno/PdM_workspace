@@ -13,7 +13,7 @@
  * @brief  Initialize non blocking timer
  * @param  delay: pointer to timer structure
  * @param  duration: duration of the timer in milliseconds
- * @retval True if success
+ * @retval True if success, False otherwise
  */
 bool_t delay_init(delay_t *delay, tick_t duration){
 
@@ -61,7 +61,7 @@ bool_t delay_read(delay_t *delay){
  * @brief  Write timer duration
  * @param  delay: pointer to timer structure
  * @param  duration: duration of the timer in milliseconds
- * @retval True if success
+ * @retval True if success, False otherwise
  */
 bool_t delay_write(delay_t *delay, tick_t duration){
 

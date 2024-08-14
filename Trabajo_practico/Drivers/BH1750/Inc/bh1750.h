@@ -17,9 +17,10 @@
 /* Public types ------------------------------------------------------------*/
 typedef bool bool_t;
 
-bool_t bh1750_init();
-bool_t bh1750_power_on();
-bool_t bh1750_high_resolution();
-bool_t bh1750_read(uint8_t *pData, uint16_t Size);
+/* Public functions prototypes ---------------------------------------------*/
+bool_t bh1750_init(void);
+bool_t bh1750_power_on(void);
+bool_t bh1750_high_resolution(void);
+bool_t bh1750_read(uint8_t *pData, uint16_t size);
 
 #endif /* BH1750_INC_BH1750_H_ */
