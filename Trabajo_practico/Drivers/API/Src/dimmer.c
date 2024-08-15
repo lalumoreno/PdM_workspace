@@ -36,7 +36,11 @@ void dimmer_init(void){
 	myDimmer.currentLx = 0;
 	myDimmer.pwmPulse = 0;
 	myDimmer.maxPulse = 199; // TODO import value of htim3.Init.Period;
-	delay_init(&myDimmer.timer, DIMMER_FSM_DELAY);
+
+	if (!delay_init(&myDimmer.timer, DIMMER_FSM_DELAY)) {
+		dimmer_error((uint8_t *)"[DIMMER] Error Delay Init\n\r");
+	}
+
 	dimmer_set_settings(SETTINGS_OPTION_1);
 
 	/* Initialize peripherals */
@@ -158,13 +162,16 @@ uint8_t dimmer_get_pulse(){
 
 	uint16_t lx = myDimmer.currentLx;
 
+	// Luminosity ranges are delimited by user settings and overflow must be avoided
 	if (lx > myDimmer.maxLx) {
 		lx = myDimmer.maxLx;
 	} else if (lx < myDimmer.minLx) {
 		lx = myDimmer.minLx;
 	}
 
-	// Get the PWM pulse based on the inverse and linear relationship between lx and pwmPulse
+	// PWM pulse is calculated with a inverse linear formula
+	// As the luminosity increases, the pulse should decrease up to 0, and as the luminosity
+	// decreases the pulse should increase up to the maximum allowed value
 	return myDimmer.maxPulse * (myDimmer.maxLx - lx) / (myDimmer.maxLx - myDimmer.minLx);
 }
 
