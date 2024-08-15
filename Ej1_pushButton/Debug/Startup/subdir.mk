@@ -16,7 +16,7 @@ S_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 Startup/%.o: ../Startup/%.s Startup/subdir.mk
-	arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -I"/home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/Drivers/STM32F4xx_HAL_Driver/Inc" -I"/home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/Drivers/CMSIS/Include" -I"/home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"/home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/Drivers/BSP/STM32F4xx_Nucleo_144" -I"/home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/Inc" -I"/home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/Drivers/Core/Inc" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -I"/home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/Drivers/STM32F4xx_HAL_Driver/Inc" -I"/home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/Drivers/CMSIS/Include" -I"/home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"/home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/Drivers/BSP/STM32F4xx_Nucleo_144" -I"/home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/Inc" -I"/home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/Drivers/Core/Inc" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
 
 clean: clean-Startup
 

@@ -64,8 +64,8 @@ all: main-build
 main-build: Ej1_pushButton.elf secondary-outputs
 
 # Tool invocations
-Ej1_pushButton.elf Ej1_pushButton.map: $(OBJS) $(USER_OBJS) /home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Ej1_pushButton.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/laura/Documents/CESE/Prog_Micro/PdM_workspace/Ej1_pushButton/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Ej1_pushButton.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Ej1_pushButton.elf Ej1_pushButton.map: $(OBJS) $(USER_OBJS) /home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Ej1_pushButton.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/laura/Documents/CESE/Prog_Micro/Workspace/PdM_workspace/Ej1_pushButton/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Ej1_pushButton.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
